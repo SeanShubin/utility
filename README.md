@@ -19,3 +19,11 @@ File System
 - Fully integration tested
 - Makes it easy to unit test calling code, as you can implement the interface with a dummy/fake/mock
 - No logic, no function chaining; instead, passes directly through to java api calls
+
+Json
+===
+
+- Sensible defaults for json marshalling
+- Ignore unknown properties to make migration easier
+- Convenience function for merging json
+- Scala "dynamic" wrapper around json
