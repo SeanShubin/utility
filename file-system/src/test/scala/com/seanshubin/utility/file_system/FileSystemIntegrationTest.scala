@@ -127,7 +127,6 @@ class FileSystemIntegrationTest extends FunSuite {
 
   private def withTempDirectory[T](doWithTempDirectory: Path => T): T = {
     val tempDir = Files.createTempDirectory("seanshubin-utility-test-")
-    println(tempDir)
     val result = doWithTempDirectory(tempDir)
     Files.walkFileTree(tempDir, DeleteVisitor)
     result
