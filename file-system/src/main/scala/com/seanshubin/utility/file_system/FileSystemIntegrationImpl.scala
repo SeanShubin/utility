@@ -1,6 +1,6 @@
 package com.seanshubin.utility.file_system
 
-import java.nio.file.{Files, FileVisitor, Path}
+import java.nio.file.{FileVisitor, Files, Path}
 
 class FileSystemIntegrationImpl extends FileSystemIntegration {
   override def readAllBytes(path: Path): Array[Byte] = Files.readAllBytes(path)

@@ -13,7 +13,7 @@ trait FileSystemIntegration {
 
   def createDirectories(path: Path): Path
 
-  def exists(path:Path):Boolean
+  def exists(path: Path): Boolean
 
-  def deleteIfExists(path:Path):Boolean
+  def deleteIfExists(path: Path): Boolean
 }

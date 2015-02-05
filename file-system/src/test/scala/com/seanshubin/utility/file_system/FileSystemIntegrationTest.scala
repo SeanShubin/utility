@@ -2,8 +2,8 @@ package com.seanshubin.utility.file_system
 
 import java.io.IOException
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, FileVisitResult, FileVisitor, Path}
 import java.nio.file.attribute.BasicFileAttributes
+import java.nio.file.{FileVisitResult, FileVisitor, Files, Path}
 
 import org.scalatest.FunSuite
 
@@ -13,20 +13,19 @@ class FileSystemIntegrationTest extends FunSuite {
   val fileSystem: FileSystemIntegration = new FileSystemIntegrationImpl
   val charset = StandardCharsets.UTF_8
 
-  testWithTempDirectory("file io") {
+  testWithTempDirectory("write and read") {
     dir =>
       val path = dir.resolve("hello.txt")
       val expected = "Hello, world!"
-      storeText(path, expected)
-      val actual = loadText(path)
+      fileSystem.write(path, expected.getBytes(charset))
+      val actual = new String(fileSystem.readAllBytes(path), charset)
       assert(actual === expected)
   }
 
   testWithTempDirectory("exists") {
     dir =>
       val path = dir.resolve("hello.txt")
-      val expected = "Hello, world!"
-      storeText(path, expected)
+      fileSystem.write(path, "Hello, world!".getBytes(charset))
       assert(fileSystem.exists(path))
   }
 
@@ -45,7 +44,7 @@ class FileSystemIntegrationTest extends FunSuite {
       val fooBar = foo.resolve("bar")
       fileSystem.createDirectories(fooBar)
       val path = fooBar.resolve("hello.txt")
-      storeText(path, "Hello, world!")
+      fileSystem.write(path, "Hello, world!".getBytes(charset))
       val visitor = new TestFileVisitor
       fileSystem.walkFileTree(foo, visitor)
       assert(visitor.events.size === 5)
@@ -54,27 +53,37 @@ class FileSystemIntegrationTest extends FunSuite {
       assert(visitor.events(2) === VisitFile(path))
       assert(visitor.events(3) === PostVisitDirectory(fooBar))
       assert(visitor.events(4) === PostVisitDirectory(foo))
-      visitor.events.foreach(println )
   }
 
-  private def storeText(path: Path, text: String): Unit = {
-    val bytes = text.getBytes(charset)
-    fileSystem.write(path, bytes)
+  testWithTempDirectory("is directory") {
+    dir =>
+      val path = dir.resolve("hello.txt")
+      fileSystem.write(path, "Hello, world!".getBytes(charset))
+      assert(fileSystem.isDirectory(dir))
+      assert(!fileSystem.isDirectory(path))
   }
 
-  private def loadText(path: Path): String = {
-    val bytes = fileSystem.readAllBytes(path)
-    val text = new String(bytes, charset)
-    text
+  testWithTempDirectory("delete if exists") {
+    dir =>
+      val path = dir.resolve("hello.txt")
+      assert(!fileSystem.exists(path))
+      fileSystem.deleteIfExists(path)
+      assert(!fileSystem.exists(path))
+      fileSystem.write(path, "Hello, world!".getBytes(charset))
+      assert(fileSystem.exists(path))
+      fileSystem.deleteIfExists(path)
+      assert(!fileSystem.exists(path))
   }
 
   sealed trait FileVisitorEvent
 
-  case class PreVisitDirectory(dir:Path) extends FileVisitorEvent
-  case class VisitFileFailed(file:Path) extends FileVisitorEvent
-  case class VisitFile(file:Path) extends FileVisitorEvent
-  case class PostVisitDirectory(dir:Path) extends FileVisitorEvent
+  case class PreVisitDirectory(dir: Path) extends FileVisitorEvent
 
+  case class VisitFileFailed(file: Path) extends FileVisitorEvent
+
+  case class VisitFile(file: Path) extends FileVisitorEvent
+
+  case class PostVisitDirectory(dir: Path) extends FileVisitorEvent
 
   private class TestFileVisitor extends FileVisitor[Path] {
     val events = new ArrayBuffer[FileVisitorEvent]()
@@ -117,7 +126,8 @@ class FileSystemIntegrationTest extends FunSuite {
   }
 
   private def withTempDirectory[T](doWithTempDirectory: Path => T): T = {
-    val tempDir = Files.createTempDirectory("foo")
+    val tempDir = Files.createTempDirectory("seanshubin-utility-test-")
+    println(tempDir)
     val result = doWithTempDirectory(tempDir)
     Files.walkFileTree(tempDir, DeleteVisitor)
     result
