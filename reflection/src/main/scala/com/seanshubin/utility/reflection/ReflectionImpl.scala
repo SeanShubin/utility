@@ -11,18 +11,18 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     result
   }
 
-  def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any = {
+  override def pullApart[T: universe.TypeTag](staticValue: T): Any = {
+    val tpe = universe.typeTag[T].tpe
+    val dynamicValue = pullApartWithType(staticValue, tpe)
+    dynamicValue
+  }
+
+  private def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any = {
     val result = simpleTypeConversions.get(tpe) match {
       case Some(simpleTypeConversion) => simpleTypeConversion.toStatic(dynamicValue.asInstanceOf[String])
       case None => pieceTogetherObject(dynamicValue.asInstanceOf[Map[String, Any]], tpe)
     }
     result
-  }
-
-  override def pullApart[T: universe.TypeTag](staticValue: T): Any = {
-    val tpe = universe.typeTag[T].tpe
-    val dynamicValue = pullApartWithType(staticValue, tpe)
-    dynamicValue
   }
 
   private def pieceTogetherObject(valueMap: Map[String, Any], tpe: universe.Type): Any = {

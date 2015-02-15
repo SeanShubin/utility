@@ -89,6 +89,14 @@ class ReflectionTest extends FunSuite {
     testReflection(staticallyTyped, classOf[Point], dynamicallyTyped)
   }
 
+  test("nested case class") {
+    val topLeft = Point(1, 2)
+    val bottomRight = Point(3, 4)
+    val staticallyTyped: Rectangle = Rectangle(topLeft, bottomRight)
+    val dynamicallyTyped = Map("topLeft" -> Map("x" -> "1", "y" -> "2"), "bottomRight" -> Map("x" -> "3", "y" -> "4"))
+    testReflection(staticallyTyped, classOf[Rectangle], dynamicallyTyped)
+  }
+
   def testReflection[T: universe.TypeTag](staticallyTyped: T, theClass: Class[T], dynamicallyTyped: Any) = {
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
     val piecedTogether = reflection.pieceTogether(dynamicallyTyped, theClass)
