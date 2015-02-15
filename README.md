@@ -27,3 +27,19 @@ Json
 - Ignore unknown properties to make migration easier
 - Convenience function for merging json
 - Scala "dynamic" wrapper around json
+
+Reflection
+===
+
+- Utility to convert between static and dynamic typing
+- Static structure supported is
+    - primitives
+    - case classes
+    - maps
+    - sequences
+- Dynamic structure supported is
+    - primitives, represented as strings
+    - case classes, represented as maps where the key is the field name
+    - maps
+    - sequences
+
