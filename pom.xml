@@ -13,12 +13,18 @@
         <module>file-system</module>
         <module>json</module>
         <module>exception</module>
+        <module>reflection</module>
     </modules>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.scala-lang</groupId>
                 <artifactId>scala-library</artifactId>
+                <version>2.11.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-reflect</artifactId>
                 <version>2.11.5</version>
             </dependency>
             <dependency>

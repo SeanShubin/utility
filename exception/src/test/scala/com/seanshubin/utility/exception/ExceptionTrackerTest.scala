@@ -13,7 +13,7 @@ class ExceptionTrackerTest extends FunSuite {
     for (i <- 1 to 2) {
       exceptions.append(new RuntimeException(s"bar $i"))
     }
-    def updateExceptionTracker(exceptionTracker: ExceptionTracker, exception: Throwable):ExceptionTracker = {
+    def updateExceptionTracker(exceptionTracker: ExceptionTracker, exception: Throwable): ExceptionTracker = {
       exceptionTracker.addException(exception)
     }
     val exceptionTracker = exceptions.foldLeft(ExceptionTracker.Empty)(updateExceptionTracker)
