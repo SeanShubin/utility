@@ -97,6 +97,12 @@ class ReflectionTest extends FunSuite {
     testReflection(staticallyTyped, classOf[Rectangle], dynamicallyTyped)
   }
 
+  test("sequence") {
+    val staticallyTyped: Seq[Int] = Seq(1, 2, 3)
+    val dynamicallyTyped = Seq("1", "2", "3")
+    testReflection(staticallyTyped, classOf[Seq[Int]], dynamicallyTyped)
+  }
+
   def testReflection[T: universe.TypeTag](staticallyTyped: T, theClass: Class[T], dynamicallyTyped: Any) = {
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
     val piecedTogether = reflection.pieceTogether(dynamicallyTyped, theClass)

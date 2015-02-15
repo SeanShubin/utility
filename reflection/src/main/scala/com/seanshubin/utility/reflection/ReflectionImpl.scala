@@ -13,14 +13,18 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
 
   override def pullApart[T: universe.TypeTag](staticValue: T): Any = {
     val tpe = universe.typeTag[T].tpe
-    val dynamicValue = pullApartWithType(staticValue, tpe)
+    val dynamicValue = pullApartAny(staticValue, tpe)
     dynamicValue
   }
 
   private def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any = {
     val result = simpleTypeConversions.get(tpe) match {
       case Some(simpleTypeConversion) => simpleTypeConversion.toStatic(dynamicValue.asInstanceOf[String])
-      case None => pieceTogetherObject(dynamicValue.asInstanceOf[Map[String, Any]], tpe)
+      case None =>
+        dynamicValue match {
+          case map: Map[String, Any] => pieceTogetherObject(map, tpe)
+          case seq: Seq[Any] => pieceTogetherSeq(seq, tpe)
+        }
     }
     result
   }
@@ -34,6 +38,15 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     val constructorMethod: universe.MethodMirror = classMirror.reflectConstructor(constructor)
     val constructed: Any = constructorMethod(parameterList: _*)
     constructed
+  }
+
+  private def pieceTogetherSeq(dynamicSeq: Seq[Any], tpe: universe.Type): Any = {
+    val elementType: universe.Type = tpe.typeArgs.head
+    def pieceTogetherElement(dynamicValue: Any): Any = {
+      pieceTogetherAny(dynamicValue, elementType)
+    }
+    val staticSeq = dynamicSeq.map(pieceTogetherElement)
+    staticSeq
   }
 
   private def createParameterList(constructorParameters: Seq[universe.TermSymbol], valueMap: Map[String, Any]): Seq[Any] = {
@@ -50,15 +63,20 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
 
   private def symbolName(parameter: universe.Symbol): String = parameter.name.decodedName.toString
 
-  private def pullApartWithType(value: Any, tpe: universe.Type): Any = {
+  private def pullApartAny(staticValue: Any, tpe: universe.Type): Any = {
     val result = simpleTypeConversions.get(tpe) match {
-      case Some(simpleTypeConversion) => simpleTypeConversion.toDynamic(value)
-      case None => pullApartObject(value, tpe)
+      case Some(simpleTypeConversion) => simpleTypeConversion.toDynamic(staticValue)
+      case None =>
+        //todo: replace conditional with polymorphism
+        if (isCaseClass(tpe)) pullApartCaseClass(staticValue, tpe)
+        else if (isMap(tpe)) ???
+        else if (isSeq(tpe)) pullApartSeq(staticValue.asInstanceOf[Seq[Any]], tpe)
+        else throw new RuntimeException("todo: replace conditional with polymorphism")
     }
     result
   }
 
-  private def pullApartObject(value: Any, tpe: universe.Type): Map[String, Any] = {
+  private def pullApartCaseClass(value: Any, tpe: universe.Type): Map[String, Any] = {
     val fields: Iterable[universe.TermSymbol] = tpe.decls.map(_.asTerm).filter(_.isGetter)
     val instanceMirror: universe.InstanceMirror = mirror.reflect(value)
     def createEntry(field: universe.TermSymbol): (String, Any) = {
@@ -66,12 +84,36 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
       val fieldMirror: universe.FieldMirror = instanceMirror.reflectField(field)
       val staticFieldValue = fieldMirror.get
       val fieldType = field.typeSignature.resultType
-      val dynamicFieldValue = pullApartWithType(staticFieldValue, fieldType)
+      val dynamicFieldValue = pullApartAny(staticFieldValue, fieldType)
       val entry = (fieldName, dynamicFieldValue)
       entry
     }
     val entries: Iterable[(String, Any)] = fields.map(createEntry)
     val map: Map[String, Any] = entries.toMap
     map
+  }
+
+  private def pullApartSeq(staticSeq: Seq[Any], tpe: universe.Type): Seq[Any] = {
+    val elementType: universe.Type = tpe.typeArgs.head
+    def pullApartElement(element: Any): Any = {
+      pullApartAny(element, elementType)
+    }
+    val dynamicSeq = staticSeq.map(pullApartElement)
+    dynamicSeq
+  }
+
+  private def isCaseClass(theType: universe.Type): Boolean = {
+    val result = theType.baseClasses.map(_.fullName).contains("scala.Product")
+    result
+  }
+
+  private def isMap(theType: universe.Type): Boolean = {
+    val result = theType.baseClasses.map(_.fullName).contains("scala.collection.immutable.Map")
+    result
+  }
+
+  private def isSeq(theType: universe.Type): Boolean = {
+    val result = theType.baseClasses.map(_.fullName).contains("scala.collection.Seq")
+    result
   }
 }
