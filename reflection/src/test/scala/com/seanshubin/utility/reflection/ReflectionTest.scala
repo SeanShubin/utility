@@ -83,6 +83,12 @@ class ReflectionTest extends FunSuite {
     testReflection(staticallyTyped, classOf[BigDecimal], dynamicallyTyped)
   }
 
+  test("case class") {
+    val staticallyTyped: Point = Point(1, 2)
+    val dynamicallyTyped = Map("x" -> "1", "y" -> "2")
+    testReflection(staticallyTyped, classOf[Point], dynamicallyTyped)
+  }
+
   def testReflection[T: universe.TypeTag](staticallyTyped: T, theClass: Class[T], dynamicallyTyped: Any) = {
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
     val piecedTogether = reflection.pieceTogether(dynamicallyTyped, theClass)
