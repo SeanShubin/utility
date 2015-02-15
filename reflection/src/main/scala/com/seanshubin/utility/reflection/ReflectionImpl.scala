@@ -21,15 +21,16 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     val result = simpleTypeConversions.get(tpe) match {
       case Some(simpleTypeConversion) => simpleTypeConversion.toStatic(dynamicValue.asInstanceOf[String])
       case None =>
-        dynamicValue match {
-          case map: Map[String, Any] => pieceTogetherObject(map, tpe)
-          case seq: Seq[Any] => pieceTogetherSeq(seq, tpe)
-        }
+        //todo: replace conditional with polymorphism
+        if (isCaseClass(tpe)) pieceTogetherCaseClass(dynamicValue.asInstanceOf[Map[String, Any]], tpe)
+        else if (isMap(tpe)) pieceTogetherMap(dynamicValue.asInstanceOf[Map[Any, Any]], tpe)
+        else if (isSeq(tpe)) pieceTogetherSeq(dynamicValue.asInstanceOf[Seq[Any]], tpe)
+        else throw new RuntimeException("todo: replace conditional with polymorphism")
     }
     result
   }
 
-  private def pieceTogetherObject(valueMap: Map[String, Any], tpe: universe.Type): Any = {
+  private def pieceTogetherCaseClass(valueMap: Map[String, Any], tpe: universe.Type): Any = {
     val constructor: universe.MethodSymbol = tpe.decl(universe.termNames.CONSTRUCTOR).asMethod
     val constructorParameters: Seq[universe.TermSymbol] = constructor.typeSignature.paramLists.head.map(_.asTerm)
     val parameterList: Seq[Any] = createParameterList(constructorParameters, valueMap)
@@ -40,13 +41,26 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     constructed
   }
 
-  private def pieceTogetherSeq(dynamicSeq: Seq[Any], tpe: universe.Type): Any = {
+  private def pieceTogetherSeq(dynamicSeq: Seq[Any], tpe: universe.Type): Seq[Any] = {
     val elementType: universe.Type = tpe.typeArgs.head
     def pieceTogetherElement(dynamicValue: Any): Any = {
       pieceTogetherAny(dynamicValue, elementType)
     }
     val staticSeq = dynamicSeq.map(pieceTogetherElement)
     staticSeq
+  }
+
+  private def pieceTogetherMap(dynamicMap: Map[Any, Any], tpe: universe.Type): Map[Any, Any] = {
+    val keyElementType: universe.Type = tpe.typeArgs(0)
+    val valueElementType: universe.Type = tpe.typeArgs(1)
+    def pieceTogetherEntry(dynamicEntry: (Any, Any)): (Any, Any) = {
+      val (dynamicKey, dynamicValue) = dynamicEntry
+      val staticKey = pieceTogetherAny(dynamicKey, keyElementType)
+      val staticValue = pieceTogetherAny(dynamicValue, valueElementType)
+      (staticKey, staticValue)
+    }
+    val staticMap = dynamicMap.map(pieceTogetherEntry)
+    staticMap
   }
 
   private def createParameterList(constructorParameters: Seq[universe.TermSymbol], valueMap: Map[String, Any]): Seq[Any] = {
@@ -69,7 +83,7 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
       case None =>
         //todo: replace conditional with polymorphism
         if (isCaseClass(tpe)) pullApartCaseClass(staticValue, tpe)
-        else if (isMap(tpe)) ???
+        else if (isMap(tpe)) pullApartMap(staticValue.asInstanceOf[Map[Any, Any]], tpe)
         else if (isSeq(tpe)) pullApartSeq(staticValue.asInstanceOf[Seq[Any]], tpe)
         else throw new RuntimeException("todo: replace conditional with polymorphism")
     }
@@ -100,6 +114,19 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     }
     val dynamicSeq = staticSeq.map(pullApartElement)
     dynamicSeq
+  }
+
+  private def pullApartMap(staticMap: Map[Any, Any], tpe: universe.Type): Map[Any, Any] = {
+    val keyElementType: universe.Type = tpe.typeArgs(0)
+    val valueElementType: universe.Type = tpe.typeArgs(1)
+    def pullApartEntry(staticEntry: (Any, Any)): (Any, Any) = {
+      val (staticKey, staticValue) = staticEntry
+      val dynamicKey = pullApartAny(staticKey, keyElementType)
+      val dynamicValue = pullApartAny(staticValue, valueElementType)
+      (dynamicKey, dynamicValue)
+    }
+    val dynamicMap = staticMap.map(pullApartEntry)
+    dynamicMap
   }
 
   private def isCaseClass(theType: universe.Type): Boolean = {
