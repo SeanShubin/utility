@@ -20,12 +20,7 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
   private def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any = {
     val result = simpleTypeConversions.get(tpe) match {
       case Some(simpleTypeConversion) => simpleTypeConversion.toStatic(dynamicValue.asInstanceOf[String])
-      case None =>
-        //todo: replace conditional with polymorphism
-        if (isCaseClass(tpe)) pieceTogetherCaseClass(dynamicValue.asInstanceOf[Map[String, Any]], tpe)
-        else if (isMap(tpe)) pieceTogetherMap(dynamicValue.asInstanceOf[Map[Any, Any]], tpe)
-        else if (isSeq(tpe)) pieceTogetherSeq(dynamicValue.asInstanceOf[Seq[Any]], tpe)
-        else throw new RuntimeException("todo: replace conditional with polymorphism")
+      case None => createComplex(tpe).pieceTogetherAny(dynamicValue, tpe)
     }
     result
   }
@@ -80,12 +75,7 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
   private def pullApartAny(staticValue: Any, tpe: universe.Type): Any = {
     val result = simpleTypeConversions.get(tpe) match {
       case Some(simpleTypeConversion) => simpleTypeConversion.toDynamic(staticValue)
-      case None =>
-        //todo: replace conditional with polymorphism
-        if (isCaseClass(tpe)) pullApartCaseClass(staticValue, tpe)
-        else if (isMap(tpe)) pullApartMap(staticValue.asInstanceOf[Map[Any, Any]], tpe)
-        else if (isSeq(tpe)) pullApartSeq(staticValue.asInstanceOf[Seq[Any]], tpe)
-        else throw new RuntimeException("todo: replace conditional with polymorphism")
+      case None => createComplex(tpe).pullApartAny(staticValue, tpe)
     }
     result
   }
@@ -129,18 +119,42 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     dynamicMap
   }
 
-  private def isCaseClass(theType: universe.Type): Boolean = {
-    val result = theType.baseClasses.map(_.fullName).contains("scala.Product")
-    result
+  private def createComplex(theType: universe.Type): Complex = {
+    val fullNames = theType.baseClasses.map(_.fullName)
+    if (fullNames.contains("scala.Product")) ComplexCaseClass
+    else if (fullNames.contains("scala.collection.immutable.Map")) ComplexMap
+    else if (fullNames.contains("scala.collection.Seq")) ComplexSeq
+    else throw new RuntimeException(s"Unsupported type: $theType")
   }
 
-  private def isMap(theType: universe.Type): Boolean = {
-    val result = theType.baseClasses.map(_.fullName).contains("scala.collection.immutable.Map")
-    result
+  private sealed trait Complex {
+    def pullApartAny(staticValue: Any, tpe: universe.Type): Any
+
+    def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any
   }
 
-  private def isSeq(theType: universe.Type): Boolean = {
-    val result = theType.baseClasses.map(_.fullName).contains("scala.collection.Seq")
-    result
+  private object ComplexCaseClass extends Complex {
+    override def pullApartAny(staticValue: Any, tpe: universe.Type): Any =
+      pullApartCaseClass(staticValue, tpe)
+
+    override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
+      pieceTogetherCaseClass(dynamicValue.asInstanceOf[Map[String, Any]], tpe)
   }
+
+  private object ComplexSeq extends Complex {
+    override def pullApartAny(staticValue: Any, tpe: universe.Type): Any =
+      pullApartSeq(staticValue.asInstanceOf[Seq[Any]], tpe)
+
+    override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
+      pieceTogetherSeq(dynamicValue.asInstanceOf[Seq[Any]], tpe)
+  }
+
+  private object ComplexMap extends Complex {
+    override def pullApartAny(staticValue: Any, tpe: universe.Type): Any =
+      pullApartMap(staticValue.asInstanceOf[Map[Any, Any]], tpe)
+
+    override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
+      pieceTogetherMap(dynamicValue.asInstanceOf[Map[Any, Any]], tpe)
+  }
+
 }
