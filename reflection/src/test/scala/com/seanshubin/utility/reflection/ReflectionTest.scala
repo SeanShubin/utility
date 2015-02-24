@@ -1,6 +1,6 @@
 package com.seanshubin.utility.reflection
 
-import java.time.ZonedDateTime
+import java.time.{Instant, ZonedDateTime}
 
 import org.scalatest.FunSuite
 
@@ -89,6 +89,12 @@ class ReflectionTest extends FunSuite {
     val staticallyTyped: ZonedDateTime = ZonedDateTime.parse("2015-02-24T09:40:03.370-08:00[America/Los_Angeles]")
     val dynamicallyTyped = "2015-02-24T09:40:03.370-08:00[America/Los_Angeles]"
     testReflection(staticallyTyped, classOf[ZonedDateTime], dynamicallyTyped)
+  }
+
+  test("instant") {
+    val staticallyTyped: Instant = Instant.parse("2015-02-24T17:45:57.612Z")
+    val dynamicallyTyped = "2015-02-24T17:45:57.612Z"
+    testReflection(staticallyTyped, classOf[Instant], dynamicallyTyped)
   }
 
   test("case class") {

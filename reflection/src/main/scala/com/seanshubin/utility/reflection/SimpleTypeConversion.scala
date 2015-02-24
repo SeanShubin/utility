@@ -1,6 +1,6 @@
 package com.seanshubin.utility.reflection
 
-import java.time.ZonedDateTime
+import java.time.{Instant, ZonedDateTime}
 
 import scala.reflect.runtime._
 
@@ -96,6 +96,12 @@ object SimpleTypeConversion {
     override def toStatic(x: String): Any = ZonedDateTime.parse(x)
   }
 
+  class InstantConversion extends SimpleTypeConversion {
+    override def toDynamic(x: Any): String = x.asInstanceOf[Instant].toString
+
+    override def toStatic(x: String): Any = Instant.parse(x)
+  }
+
   val defaultConversions: Map[universe.Type, SimpleTypeConversion] = Map(
     universe.TypeTag.Byte.tpe -> new ByteConversion,
     universe.TypeTag.Short.tpe -> new ShortConversion,
@@ -110,6 +116,7 @@ object SimpleTypeConversion {
     universe.typeTag[String].tpe -> new StringConversion,
     universe.typeTag[BigInt].tpe -> new BigIntConversion,
     universe.typeTag[BigDecimal].tpe -> new BigDecimalConversion,
-    universe.typeTag[ZonedDateTime].tpe -> new ZonedDateTimeConversion
+    universe.typeTag[ZonedDateTime].tpe -> new ZonedDateTimeConversion,
+    universe.typeTag[Instant].tpe -> new InstantConversion
   )
 }
