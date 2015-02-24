@@ -36,6 +36,13 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     constructed
   }
 
+  private def pieceTogetherOption(maybeValue: Any, tpe: universe.Type): Any = {
+    val optionType: universe.Type = tpe.typeArgs.head
+    val optionContents = pieceTogetherAny(maybeValue, optionType)
+    val optionValue = Option(optionContents)
+    optionValue
+  }
+
   private def pieceTogetherSeq(dynamicSeq: Seq[Any], tpe: universe.Type): Seq[Any] = {
     val elementType: universe.Type = tpe.typeArgs.head
     def pieceTogetherElement(dynamicValue: Any): Any = {
@@ -61,8 +68,8 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
   private def createParameterList(constructorParameters: Seq[universe.TermSymbol], valueMap: Map[String, Any]): Seq[Any] = {
     def lookupValue(term: universe.TermSymbol): Any = {
       val parameterName = symbolName(term)
-      val dynamicParameterValue = valueMap(parameterName)
       val parameterType: universe.Type = term.info
+      val dynamicParameterValue = valueMap.getOrElse(parameterName, null)
       val parameterValue = pieceTogetherAny(dynamicParameterValue, parameterType)
       parameterValue
     }
@@ -97,6 +104,17 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     map
   }
 
+  private def pullApartOption(value: Option[Any], tpe: universe.Type): Any = {
+    val optionContents = value match {
+      case Some(x) =>
+        val elementType: universe.Type = tpe.typeArgs.head
+        pullApartAny(x, elementType)
+      case None =>
+        null
+    }
+    optionContents
+  }
+
   private def pullApartSeq(staticSeq: Seq[Any], tpe: universe.Type): Seq[Any] = {
     val elementType: universe.Type = tpe.typeArgs.head
     def pullApartElement(element: Any): Any = {
@@ -121,7 +139,8 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
 
   private def createComplex(theType: universe.Type): Complex = {
     val fullNames = theType.baseClasses.map(_.fullName)
-    if (fullNames.contains("scala.Product")) ComplexCaseClass
+    if (fullNames.contains("scala.Option")) ComplexOption
+    else if (fullNames.contains("scala.Product")) ComplexCaseClass
     else if (fullNames.contains("scala.collection.immutable.Map")) ComplexMap
     else if (fullNames.contains("scala.collection.Seq")) ComplexSeq
     else throw new RuntimeException(s"Unsupported type: $theType")
@@ -131,6 +150,14 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     def pullApartAny(staticValue: Any, tpe: universe.Type): Any
 
     def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any
+  }
+
+  private object ComplexOption extends Complex {
+    override def pullApartAny(staticValue: Any, tpe: universe.Type): Any =
+      pullApartOption(staticValue.asInstanceOf[Option[Any]], tpe)
+
+    override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
+      pieceTogetherOption(dynamicValue, tpe)
   }
 
   private object ComplexCaseClass extends Complex {

@@ -1,7 +1,7 @@
 package com.seanshubin.utility.exception
 
-import org.apache.logging.log4j.{LogManager, Logger}
 import org.apache.logging.log4j.core.{Filter, Layout, Logger => LoggerImpl, LoggerContext}
+import org.apache.logging.log4j.{LogManager, Logger}
 import org.scalatest.FunSuite
 
 class ExceptionAppenderTest extends FunSuite {

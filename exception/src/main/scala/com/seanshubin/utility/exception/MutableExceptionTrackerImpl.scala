@@ -7,10 +7,10 @@ class MutableExceptionTrackerImpl extends MutableExceptionTracker {
 
   override def addException(exception: Throwable): Unit = {
     var success = false
-    while(!success) {
+    while (!success) {
       val currentValue = exceptionTrackerRef.get()
       val newValue = currentValue.addException(exception)
-      if(exceptionTrackerRef.compareAndSet(currentValue, newValue)) success = true
+      if (exceptionTrackerRef.compareAndSet(currentValue, newValue)) success = true
     }
   }
 

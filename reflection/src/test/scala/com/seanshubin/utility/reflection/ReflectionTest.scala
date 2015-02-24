@@ -109,6 +109,18 @@ class ReflectionTest extends FunSuite {
     testReflection(staticallyTyped, classOf[Map[Int, String]], dynamicallyTyped)
   }
 
+  test("has option some") {
+    val staticallyTyped: HasOption = HasOption(Some("a"))
+    val dynamicallyTyped = Map("maybeValue" -> "a")
+    testReflection(staticallyTyped, classOf[HasOption], dynamicallyTyped)
+  }
+
+  test("has option none") {
+    val staticallyTyped: HasOption = HasOption(None)
+    val dynamicallyTyped = Map("maybeValue" -> null)
+    testReflection(staticallyTyped, classOf[HasOption], dynamicallyTyped)
+  }
+
   def testReflection[T: universe.TypeTag](staticallyTyped: T, theClass: Class[T], dynamicallyTyped: Any) = {
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
     val piecedTogether = reflection.pieceTogether(dynamicallyTyped, theClass)
