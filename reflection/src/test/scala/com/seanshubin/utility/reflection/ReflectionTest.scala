@@ -1,5 +1,7 @@
 package com.seanshubin.utility.reflection
 
+import java.time.ZonedDateTime
+
 import org.scalatest.FunSuite
 
 import scala.reflect.runtime._
@@ -81,6 +83,12 @@ class ReflectionTest extends FunSuite {
     val staticallyTyped: BigDecimal = BigDecimal("12.34")
     val dynamicallyTyped = "12.34"
     testReflection(staticallyTyped, classOf[BigDecimal], dynamicallyTyped)
+  }
+
+  test("zoned date time") {
+    val staticallyTyped: ZonedDateTime = ZonedDateTime.parse("2015-02-24T09:40:03.370-08:00[America/Los_Angeles]")
+    val dynamicallyTyped = "2015-02-24T09:40:03.370-08:00[America/Los_Angeles]"
+    testReflection(staticallyTyped, classOf[ZonedDateTime], dynamicallyTyped)
   }
 
   test("case class") {
