@@ -25,10 +25,10 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     result
   }
 
-  private def pieceTogetherCaseClass(values: Any, tpe: universe.Type): Any = {
+  private def pieceTogetherCaseClass(valueMap: Map[String, Any], tpe: universe.Type): Any = {
     val constructor: universe.MethodSymbol = tpe.decl(universe.termNames.CONSTRUCTOR).asMethod
     val constructorParameters: Seq[universe.TermSymbol] = constructor.typeSignature.paramLists.head.map(_.asTerm)
-    val parameterList: Seq[Any] = createParameterList(constructorParameters, values)
+    val parameterList: Seq[Any] = createParameterList(constructorParameters, valueMap)
     val typeClass: universe.ClassSymbol = tpe.typeSymbol.asClass
     val classMirror: universe.ClassMirror = mirror.reflectClass(typeClass)
     val constructorMethod: universe.MethodMirror = classMirror.reflectConstructor(constructor)
@@ -65,11 +65,7 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     staticMap
   }
 
-  private def createParameterList(constructorParameters: Seq[universe.TermSymbol], values: Any): Seq[Any] = {
-    val valueMap = values match {
-      case x: Map[_, _] => values.asInstanceOf[Map[String, Any]]
-      case x: Seq[_] => values.asInstanceOf[Seq[(String, Any)]].toMap
-    }
+  private def createParameterList(constructorParameters: Seq[universe.TermSymbol], valueMap: Map[String, Any]): Seq[Any] = {
     def lookupValue(term: universe.TermSymbol): Any = {
       val parameterName = symbolName(term)
       val parameterType: universe.Type = term.info
@@ -91,7 +87,7 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
     result
   }
 
-  private def pullApartCaseClass(value: Any, tpe: universe.Type): Seq[(String, Any)] = {
+  private def pullApartCaseClass(value: Any, tpe: universe.Type): Map[String, Any] = {
     val fields: Iterable[universe.TermSymbol] = tpe.decls.map(_.asTerm).filter(_.isGetter)
     val instanceMirror: universe.InstanceMirror = mirror.reflect(value)
     def createEntry(field: universe.TermSymbol): (String, Any) = {
@@ -104,7 +100,8 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
       entry
     }
     val entries: Iterable[(String, Any)] = fields.map(createEntry)
-    entries.toSeq
+    val map: Map[String, Any] = entries.toMap
+    map
   }
 
   private def pullApartOption(value: Option[Any], tpe: universe.Type): Any = {
@@ -168,7 +165,7 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
       pullApartCaseClass(staticValue, tpe)
 
     override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
-      pieceTogetherCaseClass(dynamicValue, tpe)
+      pieceTogetherCaseClass(dynamicValue.asInstanceOf[Map[String, Any]], tpe)
   }
 
   private object ComplexSeq extends Complex {

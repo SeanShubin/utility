@@ -97,20 +97,9 @@ class ReflectionTest extends FunSuite {
     testReflection(staticallyTyped, classOf[Instant], dynamicallyTyped)
   }
 
-  test("case class as map") {
+  test("case class") {
     val staticallyTyped: Point = Point(1, 2)
-    val dynamicallyTypedMap = Map("x" -> "1", "y" -> "2")
-    val dynamicallyTypedSeq = Seq(("x", "1"), ("y", "2"))
-    val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
-    val piecedTogether = reflection.pieceTogether(dynamicallyTypedMap, classOf[Point])
-    assert(piecedTogether === staticallyTyped)
-    val pulledApart = reflection.pullApart(staticallyTyped)
-    assert(pulledApart === dynamicallyTypedSeq)
-  }
-
-  test("case class as seq") {
-    val staticallyTyped: Point = Point(1, 2)
-    val dynamicallyTyped = Seq(("x", "1"), ("y", "2"))
+    val dynamicallyTyped = Map("x" -> "1", "y" -> "2")
     testReflection(staticallyTyped, classOf[Point], dynamicallyTyped)
   }
 
@@ -118,7 +107,7 @@ class ReflectionTest extends FunSuite {
     val topLeft = Point(1, 2)
     val bottomRight = Point(3, 4)
     val staticallyTyped: Rectangle = Rectangle(topLeft, bottomRight)
-    val dynamicallyTyped = Seq("topLeft" -> Seq("x" -> "1", "y" -> "2"), "bottomRight" -> Seq("x" -> "3", "y" -> "4"))
+    val dynamicallyTyped = Map("topLeft" -> Map("x" -> "1", "y" -> "2"), "bottomRight" -> Map("x" -> "3", "y" -> "4"))
     testReflection(staticallyTyped, classOf[Rectangle], dynamicallyTyped)
   }
 
@@ -136,13 +125,13 @@ class ReflectionTest extends FunSuite {
 
   test("has option some") {
     val staticallyTyped: HasOption = HasOption(Some("a"))
-    val dynamicallyTyped = Seq("maybeValue" -> "a")
+    val dynamicallyTyped = Map("maybeValue" -> "a")
     testReflection(staticallyTyped, classOf[HasOption], dynamicallyTyped)
   }
 
   test("has option none") {
     val staticallyTyped: HasOption = HasOption(None)
-    val dynamicallyTyped = Seq("maybeValue" -> null)
+    val dynamicallyTyped = Map("maybeValue" -> null)
     testReflection(staticallyTyped, classOf[HasOption], dynamicallyTyped)
   }
 
