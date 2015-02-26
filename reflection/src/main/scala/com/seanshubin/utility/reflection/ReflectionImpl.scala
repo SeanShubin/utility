@@ -1,5 +1,6 @@
 package com.seanshubin.utility.reflection
 
+import scala.collection.immutable.ListMap
 import scala.reflect.runtime._
 
 class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) extends Reflection {
@@ -88,7 +89,7 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
     result
   }
 
-  private def pullApartCaseClass(value: Any, tpe: universe.Type): Map[String, Any] = {
+  private def pullApartCaseClass(value: Any, tpe: universe.Type): ListMap[String, Any] = {
     val fields: Iterable[universe.TermSymbol] = tpe.decls.map(_.asTerm).filter(_.isGetter)
     val instanceMirror: universe.InstanceMirror = mirror.reflect(value)
     def createEntry(field: universe.TermSymbol): (String, Any) = {
@@ -101,7 +102,7 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
       entry
     }
     val entries: Iterable[(String, Any)] = fields.map(createEntry)
-    val map: Map[String, Any] = entries.toMap
+    val map: ListMap[String, Any] = ListMap(entries.toSeq: _*)
     map
   }
 

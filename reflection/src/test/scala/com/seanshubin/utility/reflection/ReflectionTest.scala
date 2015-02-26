@@ -135,6 +135,15 @@ class ReflectionTest extends FunSuite {
     testReflection(staticallyTyped, classOf[HasOption], dynamicallyTyped)
   }
 
+  test("case classes preserve order") {
+    val sample = PreserveOrder(1, 2, 3, 4, 5)
+    val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
+    val pulledApart = reflection.pullApart(sample)
+    val pulledApartInOrder = pulledApart.asInstanceOf[Map[String, Int]].toSeq
+    val expected = Seq("a" -> "1", "b" -> "2", "c" -> "3", "d" -> "4", "e" -> "5")
+    assert(pulledApartInOrder === expected)
+  }
+
   def testReflection[T: universe.TypeTag](staticallyTyped: T, theClass: Class[T], dynamicallyTyped: Any) = {
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
     val piecedTogether = reflection.pieceTogether(dynamicallyTyped, theClass)
