@@ -102,21 +102,21 @@ object SimpleTypeConversion {
     override def toStatic(x: String): Any = Instant.parse(x)
   }
 
-  val defaultConversions: Map[universe.Type, SimpleTypeConversion] = Map(
-    universe.TypeTag.Byte.tpe -> new ByteConversion,
-    universe.TypeTag.Short.tpe -> new ShortConversion,
-    universe.TypeTag.Char.tpe -> new CharConversion,
-    universe.TypeTag.Int.tpe -> new IntConversion,
-    universe.TypeTag.Long.tpe -> new LongConversion,
-    universe.TypeTag.Float.tpe -> new FloatConversion,
-    universe.TypeTag.Double.tpe -> new DoubleConversion,
-    universe.TypeTag.Boolean.tpe -> new BooleanConversion,
-    universe.TypeTag.Unit.tpe -> new UnitConversion,
-    universe.TypeTag.Null.tpe -> new NullConversion,
-    universe.typeTag[String].tpe -> new StringConversion,
-    universe.typeTag[BigInt].tpe -> new BigIntConversion,
-    universe.typeTag[BigDecimal].tpe -> new BigDecimalConversion,
-    universe.typeTag[ZonedDateTime].tpe -> new ZonedDateTimeConversion,
-    universe.typeTag[Instant].tpe -> new InstantConversion
+  val defaultConversions: Map[String, SimpleTypeConversion] = Map(
+    universe.TypeTag.Byte.tpe.toString -> new ByteConversion,
+    universe.TypeTag.Short.tpe.toString -> new ShortConversion,
+    universe.TypeTag.Char.tpe.toString -> new CharConversion,
+    universe.TypeTag.Int.tpe.toString -> new IntConversion,
+    universe.TypeTag.Long.tpe.toString -> new LongConversion,
+    universe.TypeTag.Float.tpe.toString -> new FloatConversion,
+    universe.TypeTag.Double.tpe.toString -> new DoubleConversion,
+    universe.TypeTag.Boolean.tpe.toString -> new BooleanConversion,
+    universe.TypeTag.Unit.tpe.toString -> new UnitConversion,
+    universe.TypeTag.Null.tpe.toString -> new NullConversion,
+    universe.typeTag[String].tpe.toString -> new StringConversion,
+    universe.typeTag[BigInt].tpe.toString -> new BigIntConversion,
+    universe.typeTag[BigDecimal].tpe.toString -> new BigDecimalConversion,
+    universe.typeTag[ZonedDateTime].tpe.toString -> new ZonedDateTimeConversion,
+    universe.typeTag[Instant].tpe.toString -> new InstantConversion
   )
 }

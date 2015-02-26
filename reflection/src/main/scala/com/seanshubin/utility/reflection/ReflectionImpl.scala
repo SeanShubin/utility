@@ -2,7 +2,7 @@ package com.seanshubin.utility.reflection
 
 import scala.reflect.runtime._
 
-class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConversion]) extends Reflection {
+class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) extends Reflection {
   private val mirror: universe.Mirror = universe.runtimeMirror(getClass.getClassLoader)
 
   override def pieceTogether[T: universe.TypeTag](dynamicValue: Any, staticClass: Class[T]): T = {
@@ -18,7 +18,7 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
   }
 
   private def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any = {
-    val result = simpleTypeConversions.get(tpe) match {
+    val result = simpleTypeConversions.get(tpe.toString) match {
       case Some(simpleTypeConversion) => simpleTypeConversion.toStatic(dynamicValue.asInstanceOf[String])
       case None => createComplex(tpe).pieceTogetherAny(dynamicValue, tpe)
     }
@@ -80,7 +80,8 @@ class ReflectionImpl(simpleTypeConversions: Map[universe.Type, SimpleTypeConvers
   private def symbolName(parameter: universe.Symbol): String = parameter.name.decodedName.toString
 
   private def pullApartAny(staticValue: Any, tpe: universe.Type): Any = {
-    val result = simpleTypeConversions.get(tpe) match {
+    val maybeSimpleTypeConversion = simpleTypeConversions.get(tpe.toString)
+    val result = maybeSimpleTypeConversion match {
       case Some(simpleTypeConversion) => simpleTypeConversion.toDynamic(staticValue)
       case None => createComplex(tpe).pullApartAny(staticValue, tpe)
     }
