@@ -144,6 +144,15 @@ class ReflectionTest extends FunSuite {
     assert(pulledApartInOrder === expected)
   }
 
+  test("sensible error when missing a required primitive") {
+    val dynamicallyTyped = Map("x" -> "1")
+    val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
+    val exception = intercept[RuntimeException] {
+      reflection.pieceTogether(dynamicallyTyped, classOf[Point])
+    }
+    assert(exception.getMessage === "Missing value for y of type Int")
+  }
+
   def testReflection[T: universe.TypeTag](staticallyTyped: T, theClass: Class[T], dynamicallyTyped: Any) = {
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
     val piecedTogether = reflection.pieceTogether(dynamicallyTyped, theClass)

@@ -70,12 +70,19 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
     def lookupValue(term: universe.TermSymbol): Any = {
       val parameterName = symbolName(term)
       val parameterType: universe.Type = term.info
+      if (isPrimitive(parameterType) && !valueMap.contains(parameterName)) {
+        throw new RuntimeException(s"Missing value for $parameterName of type $parameterType")
+      }
       val dynamicParameterValue = valueMap.getOrElse(parameterName, null)
       val parameterValue = pieceTogetherAny(dynamicParameterValue, parameterType)
       parameterValue
     }
     val parameterList = constructorParameters.map(lookupValue)
     parameterList
+  }
+
+  private def isPrimitive(tpe: universe.Type): Boolean = {
+    tpe.baseClasses.map(_.fullName).contains("scala.AnyVal")
   }
 
   private def symbolName(parameter: universe.Symbol): String = parameter.name.decodedName.toString
