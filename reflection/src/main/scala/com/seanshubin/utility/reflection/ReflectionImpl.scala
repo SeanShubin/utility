@@ -73,8 +73,11 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
       if (isPrimitive(parameterType) && !valueMap.contains(parameterName)) {
         throw new RuntimeException(s"Missing value for $parameterName of type $parameterType")
       }
-      val dynamicParameterValue = valueMap.getOrElse(parameterName, null)
-      val parameterValue = pieceTogetherAny(dynamicParameterValue, parameterType)
+      val parameterValue = valueMap.get(parameterName) match {
+        case Some(dynamicParameterValue) =>
+          pieceTogetherAny(dynamicParameterValue, parameterType)
+        case None => null
+      }
       parameterValue
     }
     val parameterList = constructorParameters.map(lookupValue)
