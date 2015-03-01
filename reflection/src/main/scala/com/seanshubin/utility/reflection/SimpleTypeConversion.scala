@@ -1,5 +1,6 @@
 package com.seanshubin.utility.reflection
 
+import java.nio.file.{Paths, Path}
 import java.time.{Instant, ZonedDateTime}
 
 import scala.reflect.runtime._
@@ -102,6 +103,12 @@ object SimpleTypeConversion {
     override def toStatic(x: String): Any = Instant.parse(x)
   }
 
+  class PathConversion extends SimpleTypeConversion {
+    override def toDynamic(x: Any): String = x.asInstanceOf[Path].toString
+
+    override def toStatic(x: String): Any = Paths.get(x)
+  }
+
   val defaultConversions: Map[String, SimpleTypeConversion] = Map(
     universe.TypeTag.Byte.tpe.toString -> new ByteConversion,
     universe.TypeTag.Short.tpe.toString -> new ShortConversion,
@@ -117,6 +124,7 @@ object SimpleTypeConversion {
     universe.typeTag[BigInt].tpe.toString -> new BigIntConversion,
     universe.typeTag[BigDecimal].tpe.toString -> new BigDecimalConversion,
     universe.typeTag[ZonedDateTime].tpe.toString -> new ZonedDateTimeConversion,
-    universe.typeTag[Instant].tpe.toString -> new InstantConversion
+    universe.typeTag[Instant].tpe.toString -> new InstantConversion,
+    universe.typeTag[Path].tpe.toString -> new PathConversion
   )
 }

@@ -1,5 +1,6 @@
 package com.seanshubin.utility.reflection
 
+import java.nio.file.{Path, Paths}
 import java.time.{Instant, ZonedDateTime}
 
 import org.scalatest.FunSuite
@@ -95,6 +96,12 @@ class ReflectionTest extends FunSuite {
     val staticallyTyped: Instant = Instant.parse("2015-02-24T17:45:57.612Z")
     val dynamicallyTyped = "2015-02-24T17:45:57.612Z"
     testReflection(staticallyTyped, classOf[Instant], dynamicallyTyped)
+  }
+
+  test("path") {
+    val staticallyTyped: Path = Paths.get("foo", "bar")
+    val dynamicallyTyped = "foo/bar"
+    testReflection(staticallyTyped, classOf[Path], dynamicallyTyped)
   }
 
   test("case class") {
