@@ -58,7 +58,7 @@ class ReflectionTest extends FunSuite {
 
   test("null") {
     val staticallyTyped: Null = null
-    val dynamicallyTyped = "null"
+    val dynamicallyTyped = null
     testReflection(staticallyTyped, classOf[Null], dynamicallyTyped)
   }
 
@@ -140,6 +140,14 @@ class ReflectionTest extends FunSuite {
     val staticallyTyped: HasOption = HasOption(None)
     val dynamicallyTyped = Map("maybeValue" -> null)
     testReflection(staticallyTyped, classOf[HasOption], dynamicallyTyped)
+  }
+
+  test("has option null") {
+    val staticallyTyped: HasOption = HasOption(None)
+    val dynamicallyTyped = Map()
+    val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
+    val piecedTogether = reflection.pieceTogether(dynamicallyTyped, classOf[HasOption])
+    assert(piecedTogether === staticallyTyped)
   }
 
   test("case classes preserve order") {

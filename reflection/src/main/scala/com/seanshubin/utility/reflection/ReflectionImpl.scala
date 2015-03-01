@@ -76,7 +76,9 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
       val parameterValue = valueMap.get(parameterName) match {
         case Some(dynamicParameterValue) =>
           pieceTogetherAny(dynamicParameterValue, parameterType)
-        case None => null
+        case None =>
+          if(isOption(parameterType)) None
+          else null
       }
       parameterValue
     }
@@ -88,12 +90,21 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
     tpe.baseClasses.map(_.fullName).contains("scala.AnyVal")
   }
 
+  private def isOption(tpe: universe.Type): Boolean = {
+    tpe.baseClasses.map(_.fullName).contains("scala.Option")
+  }
+
   private def symbolName(parameter: universe.Symbol): String = parameter.name.decodedName.toString
 
   private def pullApartAny(staticValue: Any, tpe: universe.Type): Any = {
     val maybeSimpleTypeConversion = simpleTypeConversions.get(tpe.toString)
     val result = maybeSimpleTypeConversion match {
-      case Some(simpleTypeConversion) => simpleTypeConversion.toDynamic(staticValue)
+      case Some(simpleTypeConversion) =>
+        if(staticValue == null) {
+          null
+        } else {
+          simpleTypeConversion.toDynamic(staticValue)
+        }
       case None => createComplex(tpe).pullApartAny(staticValue, tpe)
     }
     result
