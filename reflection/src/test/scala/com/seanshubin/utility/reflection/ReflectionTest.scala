@@ -100,7 +100,7 @@ class ReflectionTest extends FunSuite {
 
   test("path") {
     val staticallyTyped: Path = Paths.get("foo", "bar")
-    val dynamicallyTyped = "foo/bar"
+    val dynamicallyTyped = staticallyTyped.toString
     testReflection(staticallyTyped, classOf[Path], dynamicallyTyped)
   }
 
