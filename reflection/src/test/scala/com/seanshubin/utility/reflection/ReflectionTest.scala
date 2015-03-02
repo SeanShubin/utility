@@ -159,6 +159,12 @@ class ReflectionTest extends FunSuite {
     assert(pulledApartInOrder === expected)
   }
 
+  test("support sets") {
+    val staticallyTyped: HasSet = HasSet(Set("a"))
+    val dynamicallyTyped = Map("values" -> Seq("a"))
+    testReflection(staticallyTyped, classOf[HasSet], dynamicallyTyped)
+  }
+
   test("sensible error when missing a required primitive") {
     val dynamicallyTyped = Map("x" -> "1")
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)

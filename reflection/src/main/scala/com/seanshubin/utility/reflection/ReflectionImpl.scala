@@ -166,6 +166,7 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
     else if (fullNames.contains("scala.Product")) ComplexCaseClass
     else if (fullNames.contains("scala.collection.immutable.Map")) ComplexMap
     else if (fullNames.contains("scala.collection.Seq")) ComplexSeq
+    else if (fullNames.contains("scala.collection.Set")) ComplexSet
     else throw new RuntimeException(s"Unsupported type: $theType")
   }
 
@@ -197,6 +198,14 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
 
     override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
       pieceTogetherSeq(dynamicValue.asInstanceOf[Seq[Any]], tpe)
+  }
+
+  private object ComplexSet extends Complex {
+    override def pullApartAny(staticValue: Any, tpe: universe.Type): Any =
+      pullApartSeq(staticValue.asInstanceOf[Set[Any]].toSeq, tpe)
+
+    override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
+      pieceTogetherSeq(dynamicValue.asInstanceOf[Seq[Any]], tpe).toSet
   }
 
   private object ComplexMap extends Complex {
