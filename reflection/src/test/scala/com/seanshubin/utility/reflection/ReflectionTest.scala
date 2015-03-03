@@ -174,6 +174,39 @@ class ReflectionTest extends FunSuite {
     assert(exception.getMessage === "Missing value for y of type Int")
   }
 
+  test("nested array") {
+    val staticallyTyped: Seq[Seq[Int]] = Seq(Seq(1, 2), Seq(3, 4))
+    val dynamicallyTyped = Seq(Seq("1", "2"), Seq("3", "4"))
+    testReflection(staticallyTyped, classOf[Seq[Seq[Int]]], dynamicallyTyped)
+  }
+
+  test("seq of case class") {
+    val staticallyTyped: Seq[Point] = Seq(Point(1, 2), Point(3, 4))
+    val dynamicallyTyped = Seq(Map("x" -> "1", "y" -> "2"), Map("x" -> "3", "y" -> "4"))
+    testReflection(staticallyTyped, classOf[Seq[Point]], dynamicallyTyped)
+  }
+
+  case class GroupArtifactVersion(group: String, artifact: String, version: String)
+
+  case class GroupAndArtifact(group: String, artifact: String) extends Ordered[GroupAndArtifact] {
+    def urlPath: String = "/" + dotToSlash(group) + "/" + artifact
+
+    private def dotToSlash(s: String): String = s.replaceAll("\\.", "/")
+
+    override def compare(that: GroupAndArtifact): Int = {
+      Ordering.Tuple2(Ordering.String, Ordering.String).compare((group, artifact), (that.group, that.artifact))
+    }
+  }
+  case class Configuration(pomFileName: String,
+                           directoriesToSearch: Seq[Path],
+                           directoryNamesToSkip: Set[String],
+                           mavenRepositories: Seq[String],
+                           doNotUpgradeFrom: Set[GroupAndArtifact],
+                           doNotUpgradeTo: Set[GroupArtifactVersion],
+                           automaticallyUpgrade: Boolean,
+                           reportDirectory: Path,
+                           cacheDirectory: Path,
+                           cacheExpire: String)
   def testReflection[T: universe.TypeTag](staticallyTyped: T, theClass: Class[T], dynamicallyTyped: Any) = {
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
     val piecedTogether = reflection.pieceTogether(dynamicallyTyped, theClass)
