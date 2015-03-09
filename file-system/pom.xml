@@ -5,8 +5,8 @@
         <artifactId>utility</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>utility-file-system</artifactId>
-    <name>utility-file-system</name>
+    <artifactId>utility-filesystem</artifactId>
+    <name>utility-filesystem</name>
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>
