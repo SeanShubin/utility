@@ -77,7 +77,7 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
         case Some(dynamicParameterValue) =>
           pieceTogetherAny(dynamicParameterValue, parameterType)
         case None =>
-          if(isOption(parameterType)) None
+          if (isOption(parameterType)) None
           else null
       }
       parameterValue
@@ -100,7 +100,7 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
     val maybeSimpleTypeConversion = simpleTypeConversions.get(tpe.toString)
     val result = maybeSimpleTypeConversion match {
       case Some(simpleTypeConversion) =>
-        if(staticValue == null) {
+        if (staticValue == null) {
           null
         } else {
           simpleTypeConversion.toDynamic(staticValue)
@@ -186,34 +186,67 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
 
   private object ComplexCaseClass extends Complex {
     override def pullApartAny(staticValue: Any, tpe: universe.Type): Any =
-      pullApartCaseClass(staticValue, tpe)
+      if (staticValue == null) {
+        null
+      } else {
+        pullApartCaseClass(staticValue, tpe)
+      }
 
     override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
-      pieceTogetherCaseClass(dynamicValue.asInstanceOf[Map[String, Any]], tpe)
+      if (dynamicValue == null) {
+        null
+      } else {
+        pieceTogetherCaseClass(dynamicValue.asInstanceOf[Map[String, Any]], tpe)
+      }
   }
 
   private object ComplexSeq extends Complex {
-    override def pullApartAny(staticValue: Any, tpe: universe.Type): Any =
-      pullApartSeq(staticValue.asInstanceOf[Seq[Any]], tpe)
+    override def pullApartAny(staticValue: Any, tpe: universe.Type): Any = {
+      if (staticValue == null) {
+        null
+      } else {
+        pullApartSeq(staticValue.asInstanceOf[Seq[Any]], tpe)
+      }
+    }
 
     override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
-      pieceTogetherSeq(dynamicValue.asInstanceOf[Seq[Any]], tpe)
+      if (dynamicValue == null) {
+        null
+      } else {
+        pieceTogetherSeq(dynamicValue.asInstanceOf[Seq[Any]], tpe)
+      }
   }
 
   private object ComplexSet extends Complex {
     override def pullApartAny(staticValue: Any, tpe: universe.Type): Any =
-      pullApartSeq(staticValue.asInstanceOf[Set[Any]].toSeq, tpe)
+      if (staticValue == null) {
+        null
+      } else {
+        pullApartSeq(staticValue.asInstanceOf[Set[Any]].toSeq, tpe)
+      }
 
     override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
-      pieceTogetherSeq(dynamicValue.asInstanceOf[Seq[Any]], tpe).toSet
+      if (dynamicValue == null) {
+        null
+      } else {
+        pieceTogetherSeq(dynamicValue.asInstanceOf[Seq[Any]], tpe).toSet
+      }
   }
 
   private object ComplexMap extends Complex {
     override def pullApartAny(staticValue: Any, tpe: universe.Type): Any =
-      pullApartMap(staticValue.asInstanceOf[Map[Any, Any]], tpe)
+      if (staticValue == null) {
+        null
+      } else {
+        pullApartMap(staticValue.asInstanceOf[Map[Any, Any]], tpe)
+      }
 
     override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
-      pieceTogetherMap(dynamicValue.asInstanceOf[Map[Any, Any]], tpe)
+      if (dynamicValue == null) {
+        null
+      } else {
+        pieceTogetherMap(dynamicValue.asInstanceOf[Map[Any, Any]], tpe)
+      }
   }
 
 }

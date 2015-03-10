@@ -18,7 +18,7 @@ class FileSystemIntegrationImpl extends FileSystemIntegration {
 
   override def exists(path: Path): Boolean = Files.exists(path)
 
-  override def newOutputStream(path:Path):OutputStream = Files.newOutputStream(path:Path):OutputStream
+  override def newOutputStream(path: Path): OutputStream = Files.newOutputStream(path: Path): OutputStream
 
   override def newInputStream(path: Path): InputStream = Files.newInputStream(path)
 }

@@ -84,7 +84,7 @@ class FileSystemIntegrationTest extends FunSuite {
       out.write(bytes)
       out.close()
       val in = fileSystem.newInputStream(path)
-      val inBytes:Array[Byte] = new Array(bytes.size)
+      val inBytes: Array[Byte] = new Array(bytes.size)
       in.read(inBytes)
       assert(in.read() == -1)
       in.close()

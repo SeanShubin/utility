@@ -1,6 +1,6 @@
 package com.seanshubin.utility.reflection
 
-import java.nio.file.{Paths, Path}
+import java.nio.file.{Path, Paths}
 import java.time.{Instant, ZonedDateTime}
 
 import scala.reflect.runtime._

@@ -136,13 +136,13 @@ class ReflectionTest extends FunSuite {
     testReflection(staticallyTyped, classOf[HasOption], dynamicallyTyped)
   }
 
-  test("has option none") {
+  test("has option null") {
     val staticallyTyped: HasOption = HasOption(None)
     val dynamicallyTyped = Map("maybeValue" -> null)
     testReflection(staticallyTyped, classOf[HasOption], dynamicallyTyped)
   }
 
-  test("has option null") {
+  test("has option none") {
     val staticallyTyped: HasOption = HasOption(None)
     val dynamicallyTyped = Map()
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
@@ -186,6 +186,30 @@ class ReflectionTest extends FunSuite {
     testReflection(staticallyTyped, classOf[Seq[Point]], dynamicallyTyped)
   }
 
+  test("null seq") {
+    val staticallyTyped: Seq[Point] = null
+    val dynamicallyTyped = null
+    testReflection(staticallyTyped, classOf[Seq[Point]], dynamicallyTyped)
+  }
+
+  test("null set") {
+    val staticallyTyped: Set[Point] = null
+    val dynamicallyTyped = null
+    testReflection(staticallyTyped, classOf[Set[Point]], dynamicallyTyped)
+  }
+
+  test("null map") {
+    val staticallyTyped: Map[Int, Int] = null
+    val dynamicallyTyped = null
+    testReflection(staticallyTyped, classOf[Map[Int, Int]], dynamicallyTyped)
+  }
+
+  test("null case class") {
+    val staticallyTyped: Point = null
+    val dynamicallyTyped = null
+    testReflection(staticallyTyped, classOf[Point], dynamicallyTyped)
+  }
+
   case class GroupArtifactVersion(group: String, artifact: String, version: String)
 
   case class GroupAndArtifact(group: String, artifact: String) extends Ordered[GroupAndArtifact] {
@@ -197,6 +221,7 @@ class ReflectionTest extends FunSuite {
       Ordering.Tuple2(Ordering.String, Ordering.String).compare((group, artifact), (that.group, that.artifact))
     }
   }
+
   case class Configuration(pomFileName: String,
                            directoriesToSearch: Seq[Path],
                            directoryNamesToSkip: Set[String],
@@ -207,6 +232,7 @@ class ReflectionTest extends FunSuite {
                            reportDirectory: Path,
                            cacheDirectory: Path,
                            cacheExpire: String)
+
   def testReflection[T: universe.TypeTag](staticallyTyped: T, theClass: Class[T], dynamicallyTyped: Any) = {
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
     val piecedTogether = reflection.pieceTogether(dynamicallyTyped, theClass)
