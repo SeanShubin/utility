@@ -7,6 +7,7 @@ import java.nio.file.{FileVisitResult, FileVisitor, Files, Path}
 
 import org.scalatest.FunSuite
 
+import scala.collection.JavaConversions
 import scala.collection.mutable.ArrayBuffer
 
 class FileSystemIntegrationTest extends FunSuite {
@@ -90,6 +91,16 @@ class FileSystemIntegrationTest extends FunSuite {
       in.close()
       val actual = new String(inBytes, charset)
       assert(actual === expected)
+  }
+
+  testWithTempDirectory("write and read lines") {
+    dir =>
+      val path = dir.resolve("hello.txt")
+      val expected = Seq("Hello, line one!", "Hello, line two!")
+      val charset = StandardCharsets.UTF_8
+      fileSystem.write(path, JavaConversions.asJavaIterable(expected), charset)
+      val actual = JavaConversions.collectionAsScalaIterable(fileSystem.readAllLines(path, charset))
+      assert(actual.toSeq === expected.toSeq)
   }
 
   sealed trait FileVisitorEvent

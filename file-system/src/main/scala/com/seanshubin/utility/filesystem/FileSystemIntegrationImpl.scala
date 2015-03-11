@@ -1,6 +1,7 @@
 package com.seanshubin.utility.filesystem
 
-import java.io.{InputStream, OutputStream}
+import java.io._
+import java.nio.charset.Charset
 import java.nio.file.{FileVisitor, Files, Path}
 
 class FileSystemIntegrationImpl extends FileSystemIntegration {
@@ -11,6 +12,11 @@ class FileSystemIntegrationImpl extends FileSystemIntegration {
   override def walkFileTree(start: Path, visitor: FileVisitor[_ >: Path]): Path = Files.walkFileTree(start, visitor)
 
   override def write(path: Path, bytes: Array[Byte]): Path = Files.write(path, bytes)
+
+  override def write(path: Path, lines: java.lang.Iterable[_ <: CharSequence], charset: Charset): Path =
+    Files.write(path, lines, charset)
+
+  override def readAllLines(path: Path, charset: Charset): java.util.List[String] = Files.readAllLines(path, charset)
 
   override def isDirectory(path: Path): Boolean = Files.isDirectory(path)
 
