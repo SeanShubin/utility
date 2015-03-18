@@ -13,6 +13,7 @@
         <module>file-system</module>
         <module>json</module>
         <module>reflection</module>
+        <module>zip</module>
     </modules>
     <dependencyManagement>
         <dependencies>
