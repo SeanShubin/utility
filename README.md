@@ -43,3 +43,8 @@ Reflection
     - maps
     - sequences
 
+Zip
+===
+
+- Iterate through the contents of a zip file
+

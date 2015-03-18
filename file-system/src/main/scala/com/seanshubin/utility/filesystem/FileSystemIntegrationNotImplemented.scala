@@ -6,7 +6,7 @@ import java.nio.charset.Charset
 import java.nio.file.{FileVisitor, Path}
 import java.util
 
-class FileSystemIntegrationNotImplemented extends FileSystemIntegration{
+class FileSystemIntegrationNotImplemented extends FileSystemIntegration {
   override def readAllBytes(path: Path): Array[Byte] = ???
 
   override def newOutputStream(path: Path): OutputStream = ???

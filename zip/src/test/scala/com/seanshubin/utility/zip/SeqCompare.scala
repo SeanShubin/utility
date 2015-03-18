@@ -9,18 +9,18 @@ trait SeqCompare {
 }
 
 object SeqCompare {
-  def compare(actualSeq:Seq[String], expectedSeq:Seq[String]):SeqCompare = {
+  def compare(actualSeq: Seq[String], expectedSeq: Seq[String]): SeqCompare = {
     compare(Nil, 0, actualSeq.toList, expectedSeq.toList)
   }
 
   @tailrec
-  private def compare(reversedSoFar:List[String], index:Int, actualList:List[String], expectedList:List[String]):SeqCompare = {
+  private def compare(reversedSoFar: List[String], index: Int, actualList: List[String], expectedList: List[String]): SeqCompare = {
     (actualList.headOption, expectedList.headOption) match {
       case (None, None) => SeqSame
       case (Some(actual), None) => SeqExtra(reversedSoFar.reverse, index, actual)
       case (None, Some(expected)) => SeqMissing(reversedSoFar.reverse, index, expected)
-      case (Some(actual), Some(expected)) => if(actual == expected) {
-        compare(expected :: reversedSoFar, index+1, actualList.tail, expectedList.tail)
+      case (Some(actual), Some(expected)) => if (actual == expected) {
+        compare(expected :: reversedSoFar, index + 1, actualList.tail, expectedList.tail)
       } else {
         SeqDifference(reversedSoFar.reverse, index, actual, expected)
       }
