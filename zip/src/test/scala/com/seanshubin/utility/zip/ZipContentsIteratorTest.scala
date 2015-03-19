@@ -36,7 +36,7 @@ class ZipContentsIteratorTest extends FunSuite {
         |sample-data.zip/zip-a.zip/dir-a/zip-f.zip/dir-f/file-k.txt
         |  Hello K!
         |sample-data.zip/zip-g.zip/dir-g/
-        | """.trim.stripMargin.split("\n")
+        | """.trim.stripMargin.split("\r\n|\r|\n")
     def isZip(name: String) = name.endsWith(".zip")
     def operateOnCursor(cursor: ZipContents): Seq[String] = {
       val ZipContents(path, zipEntry, bytes) = cursor
