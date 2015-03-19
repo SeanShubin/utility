@@ -1,6 +1,6 @@
 package com.seanshubin.utility.filesystem
 
-import java.io.{InputStream, OutputStream}
+import java.io.{BufferedReader, BufferedWriter, InputStream, OutputStream}
 import java.lang.Iterable
 import java.nio.charset.Charset
 import java.nio.file.{FileVisitor, Path}
@@ -28,4 +28,8 @@ class FileSystemIntegrationNotImplemented extends FileSystemIntegration {
   override def deleteIfExists(path: Path): Boolean = ???
 
   override def exists(path: Path): Boolean = ???
+
+  override def newBufferedWriter(path: Path, charset: Charset): BufferedWriter = ???
+
+  override def newBufferedReader(path: Path, charset: Charset): BufferedReader = ???
 }

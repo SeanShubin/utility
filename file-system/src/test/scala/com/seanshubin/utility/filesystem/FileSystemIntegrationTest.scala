@@ -76,7 +76,7 @@ class FileSystemIntegrationTest extends FunSuite {
       assert(!fileSystem.exists(path))
   }
 
-  testWithTempDirectory("streaming io") {
+  testWithTempDirectory("streaming binary io") {
     dir =>
       val path = dir.resolve("hello.txt")
       val expected = "Hello, world!"
@@ -90,6 +90,22 @@ class FileSystemIntegrationTest extends FunSuite {
       assert(in.read() == -1)
       in.close()
       val actual = new String(inBytes, charset)
+      assert(actual === expected)
+  }
+
+  testWithTempDirectory("streaming text io") {
+    dir =>
+      val path = dir.resolve("hello.txt")
+      val expected = "Hello, world!"
+      val out = fileSystem.newBufferedWriter(path, charset)
+      out.write(expected)
+      out.close()
+      val in = fileSystem.newBufferedReader(path, charset)
+      val inChars: Array[Char] = new Array(expected.length)
+      in.read(inChars)
+      assert(in.read() == -1)
+      in.close()
+      val actual = new String(inChars)
       assert(actual === expected)
   }
 

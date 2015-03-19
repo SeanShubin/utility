@@ -27,4 +27,8 @@ class FileSystemIntegrationImpl extends FileSystemIntegration {
   override def newOutputStream(path: Path): OutputStream = Files.newOutputStream(path: Path): OutputStream
 
   override def newInputStream(path: Path): InputStream = Files.newInputStream(path)
+
+  override def newBufferedWriter(path: Path, charset: Charset): BufferedWriter = Files.newBufferedWriter(path, charset)
+
+  override def newBufferedReader(path: Path, charset: Charset): BufferedReader = Files.newBufferedReader(path, charset)
 }
