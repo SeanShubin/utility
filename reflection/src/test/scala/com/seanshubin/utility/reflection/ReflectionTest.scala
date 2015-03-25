@@ -1,5 +1,6 @@
 package com.seanshubin.utility.reflection
 
+import java.io.File
 import java.nio.file.{Path, Paths}
 import java.time.{Instant, ZonedDateTime}
 
@@ -102,6 +103,12 @@ class ReflectionTest extends FunSuite {
     val staticallyTyped: Path = Paths.get("foo", "bar")
     val dynamicallyTyped = staticallyTyped.toString
     testReflection(staticallyTyped, classOf[Path], dynamicallyTyped)
+  }
+
+  test("file") {
+    val staticallyTyped: File = new File("foo-bar.txt")
+    val dynamicallyTyped = staticallyTyped.toString
+    testReflection(staticallyTyped, classOf[File], dynamicallyTyped)
   }
 
   test("case class") {

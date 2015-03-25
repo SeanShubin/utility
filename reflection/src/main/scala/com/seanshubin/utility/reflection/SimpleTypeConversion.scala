@@ -1,5 +1,6 @@
 package com.seanshubin.utility.reflection
 
+import java.io.File
 import java.nio.file.{Path, Paths}
 import java.time.{Instant, ZonedDateTime}
 
@@ -109,6 +110,12 @@ object SimpleTypeConversion {
     override def toStatic(x: String): Any = Paths.get(x)
   }
 
+  class FileConversion extends SimpleTypeConversion {
+    override def toDynamic(x: Any): String = x.asInstanceOf[File].toString
+
+    override def toStatic(x: String): Any = new File(x)
+  }
+
   val defaultConversions: Map[String, SimpleTypeConversion] = Map(
     universe.TypeTag.Byte.tpe.toString -> new ByteConversion,
     universe.TypeTag.Short.tpe.toString -> new ShortConversion,
@@ -125,6 +132,7 @@ object SimpleTypeConversion {
     universe.typeTag[BigDecimal].tpe.toString -> new BigDecimalConversion,
     universe.typeTag[ZonedDateTime].tpe.toString -> new ZonedDateTimeConversion,
     universe.typeTag[Instant].tpe.toString -> new InstantConversion,
-    universe.typeTag[Path].tpe.toString -> new PathConversion
+    universe.typeTag[Path].tpe.toString -> new PathConversion,
+    universe.typeTag[File].tpe.toString -> new FileConversion
   )
 }
