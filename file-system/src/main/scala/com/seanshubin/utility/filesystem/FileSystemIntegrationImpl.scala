@@ -5,13 +5,13 @@ import java.nio.charset.Charset
 import java.nio.file.{FileVisitor, Files, Path}
 
 class FileSystemIntegrationImpl extends FileSystemIntegration {
-  override def readAllBytes(path: Path): Array[Byte] = Files.readAllBytes(path)
+  override def readAllBytes(path: Path): Seq[Byte] = Files.readAllBytes(path).toSeq
 
   override def createDirectories(path: Path): Path = Files.createDirectories(path)
 
   override def walkFileTree(start: Path, visitor: FileVisitor[_ >: Path]): Path = Files.walkFileTree(start, visitor)
 
-  override def write(path: Path, bytes: Array[Byte]): Path = Files.write(path, bytes)
+  override def write(path: Path, bytes: Seq[Byte]): Path = Files.write(path, bytes.toArray)
 
   override def write(path: Path, lines: java.lang.Iterable[_ <: CharSequence], charset: Charset): Path =
     Files.write(path, lines, charset)

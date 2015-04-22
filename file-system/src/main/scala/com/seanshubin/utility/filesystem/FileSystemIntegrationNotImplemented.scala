@@ -7,7 +7,7 @@ import java.nio.file.{FileVisitor, Path}
 import java.util
 
 class FileSystemIntegrationNotImplemented extends FileSystemIntegration {
-  override def readAllBytes(path: Path): Array[Byte] = ???
+  override def readAllBytes(path: Path): Seq[Byte] = ???
 
   override def newOutputStream(path: Path): OutputStream = ???
 
@@ -17,7 +17,7 @@ class FileSystemIntegrationNotImplemented extends FileSystemIntegration {
 
   override def newInputStream(path: Path): InputStream = ???
 
-  override def write(path: Path, bytes: Array[Byte]): Path = ???
+  override def write(path: Path, bytes: Seq[Byte]): Path = ???
 
   override def write(path: Path, lines: Iterable[_ <: CharSequence], charset: Charset): Path = ???
 

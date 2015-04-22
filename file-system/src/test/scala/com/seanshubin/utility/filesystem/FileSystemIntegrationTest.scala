@@ -19,7 +19,7 @@ class FileSystemIntegrationTest extends FunSuite {
       val path = dir.resolve("hello.txt")
       val expected = "Hello, world!"
       fileSystem.write(path, expected.getBytes(charset))
-      val actual = new String(fileSystem.readAllBytes(path), charset)
+      val actual = new String(fileSystem.readAllBytes(path).toArray, charset)
       assert(actual === expected)
   }
 

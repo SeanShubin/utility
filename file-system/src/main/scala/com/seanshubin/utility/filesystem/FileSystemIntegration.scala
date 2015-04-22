@@ -5,9 +5,9 @@ import java.nio.charset.Charset
 import java.nio.file.{FileVisitor, Path}
 
 trait FileSystemIntegration {
-  def readAllBytes(path: Path): Array[Byte]
+  def readAllBytes(path: Path): Seq[Byte]
 
-  def write(path: Path, bytes: Array[Byte]): Path
+  def write(path: Path, bytes: Seq[Byte]): Path
 
   def write(path: Path, lines: java.lang.Iterable[_ <: CharSequence], charset: Charset): Path
 
