@@ -131,6 +131,12 @@ class ReflectionTest extends FunSuite {
     testReflection(staticallyTyped, classOf[Seq[Int]], dynamicallyTyped)
   }
 
+  test("list") {
+    val staticallyTyped: List[Int] = List(1, 2, 3)
+    val dynamicallyTyped = List("1", "2", "3")
+    testReflection(staticallyTyped, classOf[List[Int]], dynamicallyTyped)
+  }
+
   test("map") {
     val staticallyTyped: Map[Int, String] = Map(1 -> "a", 2 -> "b", 3 -> "c")
     val dynamicallyTyped = Map("1" -> "a", "2" -> "b", "3" -> "c")

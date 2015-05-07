@@ -162,12 +162,13 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
 
   private def createComplex(theType: universe.Type): Complex = {
     val fullNames = theType.baseClasses.map(_.fullName)
-    if (fullNames.contains("scala.Option")) ComplexOption
-    else if (fullNames.contains("scala.Product")) ComplexCaseClass
+    val result = if (fullNames.contains("scala.Option")) ComplexOption
     else if (fullNames.contains("scala.collection.immutable.Map")) ComplexMap
     else if (fullNames.contains("scala.collection.Seq")) ComplexSeq
     else if (fullNames.contains("scala.collection.Set")) ComplexSet
+    else if (fullNames.contains("scala.Product")) ComplexCaseClass
     else throw new RuntimeException(s"Unsupported type: $theType")
+    result
   }
 
   private sealed trait Complex {
