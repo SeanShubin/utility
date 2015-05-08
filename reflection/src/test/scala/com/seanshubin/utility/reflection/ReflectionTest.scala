@@ -6,6 +6,7 @@ import java.time.{Instant, ZonedDateTime}
 
 import org.scalatest.FunSuite
 
+import scala.collection.immutable.ListMap
 import scala.reflect.runtime._
 
 class ReflectionTest extends FunSuite {
@@ -165,6 +166,15 @@ class ReflectionTest extends FunSuite {
 
   test("case classes preserve order") {
     val sample = PreserveOrder(1, 2, 3, 4, 5)
+    val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
+    val pulledApart = reflection.pullApart(sample)
+    val pulledApartInOrder = pulledApart.asInstanceOf[Map[String, Int]].toSeq
+    val expected = Seq("a" -> "1", "b" -> "2", "c" -> "3", "d" -> "4", "e" -> "5")
+    assert(pulledApartInOrder === expected)
+  }
+
+  test("list maps preserve order") {
+    val sample = ListMap("a" -> "1", "b" -> "2", "c" -> "3", "d" -> "4", "e" -> "5")
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
     val pulledApart = reflection.pullApart(sample)
     val pulledApartInOrder = pulledApart.asInstanceOf[Map[String, Int]].toSeq

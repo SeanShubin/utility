@@ -128,6 +128,7 @@ object SimpleTypeConversion {
     universe.TypeTag.Unit.tpe.toString -> new UnitConversion,
     universe.TypeTag.Null.tpe.toString -> new NullConversion,
     universe.typeTag[String].tpe.toString -> new StringConversion,
+    "java.lang.String" -> new StringConversion,
     universe.typeTag[BigInt].tpe.toString -> new BigIntConversion,
     universe.typeTag[BigDecimal].tpe.toString -> new BigDecimalConversion,
     universe.typeTag[ZonedDateTime].tpe.toString -> new ZonedDateTimeConversion,
