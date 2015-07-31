@@ -2,10 +2,8 @@ package com.seanshubin.utility.filesystem
 
 import java.io._
 import java.nio.charset.Charset
-import java.nio.file.{Paths, FileVisitor, Path}
+import java.nio.file.{FileVisitor, Path, Paths}
 import java.util
-
-import com.seanshubin.utility.filesystem.{Tree, TreeVisitor, Branches}
 
 import scala.annotation.tailrec
 import scala.collection.JavaConversions

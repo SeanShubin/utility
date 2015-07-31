@@ -2,8 +2,8 @@ package com.seanshubin.utility.filesystem
 
 import java.io.IOException
 import java.nio.charset.StandardCharsets
-import java.nio.file.attribute.BasicFileAttributes
 import java.nio.file._
+import java.nio.file.attribute.BasicFileAttributes
 
 import org.scalatest.FunSuite
 

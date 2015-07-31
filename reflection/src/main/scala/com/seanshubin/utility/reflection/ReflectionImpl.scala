@@ -156,7 +156,7 @@ class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) e
       val dynamicValue = pullApartAny(staticValue, valueElementType)
       (dynamicKey, dynamicValue)
     }
-    val dynamicMap = ListMap(staticMap.toSeq.map(pullApartEntry):_*)
+    val dynamicMap = ListMap(staticMap.toSeq.map(pullApartEntry): _*)
     dynamicMap
   }
 
