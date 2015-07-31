@@ -13,7 +13,9 @@ class FileSystemIntegrationImpl extends FileSystemIntegration {
 
   override def write(path: Path, bytes: Seq[Byte]): Path = Files.write(path, bytes.toArray)
 
-  override def write(path: Path, lines: java.lang.Iterable[_ <: CharSequence], charset: Charset): Path =
+  override def write(path: Path,
+                     lines: java.lang.Iterable[_ <: CharSequence],
+                     charset: Charset): Path =
     Files.write(path, lines, charset)
 
   override def readAllLines(path: Path, charset: Charset): java.util.List[String] = Files.readAllLines(path, charset)
