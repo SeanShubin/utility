@@ -7,11 +7,21 @@ import java.util
 
 import scala.annotation.tailrec
 import scala.collection.JavaConversions
+import scala.collection.immutable.ListMap
 import scala.collection.mutable.ArrayBuffer
 
 class FileSystemIntegrationFake extends FileSystemIntegration {
   private var roots: Branches = Branches.Empty
-  private var content: Map[Path, ArrayBuffer[Byte]] = Map()
+  private var content: Map[Path, ArrayBuffer[Byte]] = ListMap()
+
+  def toMultipleLineString: Seq[String] = {
+    roots.toMultipleLineString ++ content.toList.map(contentToString)
+  }
+
+  private def contentToString(entry: (Path, Seq[Byte])): String = {
+    val (path, bytes) = entry
+    s"(${bytes.size} bytes) ${pathToPathParts(path).mkString("/")}"
+  }
 
   class FakeOutputStream(path: Path) extends OutputStream {
     val buffer = content(path)
@@ -128,21 +138,7 @@ class FileSystemIntegrationFake extends FileSystemIntegration {
 
   private def addFile(path: Path): Unit = {
     val pathParts = pathToPathParts(path)
-    roots = addFileRecursive(roots, pathParts)
-  }
-
-  private def addFileRecursive(base: Branches, pathParts: List[String]): Branches = {
-    pathParts match {
-      case Nil => base
-      case name :: Nil =>
-        if (base.containsTreeNamed(name)) {
-          base
-        } else {
-          base.addTreeNamed(name)
-        }
-      case name :: remain =>
-        base.addOrReplaceTree(Tree(name, addFileRecursive(Branches.Empty, remain)))
-    }
+    roots = roots.add(pathParts: _*)
   }
 
   private def pathToPathParts(path: Path): List[String] = {

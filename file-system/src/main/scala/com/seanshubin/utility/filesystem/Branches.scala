@@ -1,6 +1,16 @@
 package com.seanshubin.utility.filesystem
 
 case class Branches(trees: List[Tree]) {
+  def toMultipleLineString: Seq[String] = {
+    toIndentedMultipleLineString(0)
+  }
+
+  def toIndentedMultipleLineString(depth: Int): Seq[String] = {
+    def treeToMultipleLineString(tree: Tree): Seq[String] = tree.toIndentedMultipleLineString(depth)
+    val lines = trees.flatMap(treeToMultipleLineString)
+    lines
+  }
+
   def add(path: String*) = addList(path.toList)
 
   def addList(path: List[String]): Branches = {
