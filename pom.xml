@@ -12,7 +12,6 @@
     <modules>
         <module>file-system</module>
         <module>json</module>
-        <module>reflection</module>
         <module>zip</module>
         <module>system</module>
     </modules>
