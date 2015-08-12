@@ -10,7 +10,7 @@ What belongs here are methods that are a one-to-one pass through to the system i
 What does NOT belong here is logic, wrappers, helpers, utilities, method chaining, etc.
 If you need any of that, put them in a separate cass that delegates to this one
 The contract can be used when implementing fakes, mocks, and stubs
-Proper abstractions can be implemented with full test coverage by delegating to these low level wrappers
+Proper abstractions can be implemented with full unit test coverage by delegating to these low level wrappers
 */
 class RandomContractIntegration(random: Random) extends RandomContract {
   override def nextBytes(bytes: Array[Byte]): Unit = random.nextBytes(bytes)
