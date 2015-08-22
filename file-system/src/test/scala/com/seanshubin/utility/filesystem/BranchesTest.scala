@@ -5,6 +5,9 @@ import org.scalatest.FunSuite
 import scala.collection.mutable.ArrayBuffer
 
 class BranchesTest extends FunSuite {
+
+  import FileSystemIntegrationFake._
+
   test("create with one named branch") {
     val actual = Tree.createBranches("foo")
     val expected = Branches(List(Tree("foo", Branches.Empty)))
