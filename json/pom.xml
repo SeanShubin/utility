@@ -1,12 +1,12 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.seanshubin</groupId>
-        <artifactId>utility</artifactId>
+        <groupId>com.seanshubin.utility</groupId>
+        <artifactId>utility-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>utility-json</artifactId>
-    <name>utility-json</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.seanshubin</groupId>
-    <artifactId>utility</artifactId>
-    <name>utility</name>
+    <groupId>com.seanshubin.utility</groupId>
+    <artifactId>utility-parent</artifactId>
+    <name>${project.groupId}:${project.artifactId}</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
@@ -14,6 +14,8 @@
         <module>json</module>
         <module>zip</module>
         <module>system</module>
+        <module>collection</module>
+        <module>string</module>
     </modules>
     <dependencyManagement>
         <dependencies>
