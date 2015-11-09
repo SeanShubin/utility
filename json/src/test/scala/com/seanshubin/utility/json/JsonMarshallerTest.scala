@@ -1,14 +1,9 @@
 package com.seanshubin.utility.json
 
+import java.time._
+import java.time.temporal.ChronoUnit
+
 import org.scalatest.FunSuite
-
-case class SampleForMarshalling(stringSeq: Seq[String],
-                                stringSeqSeq: Seq[Seq[String]],
-                                optionString: Option[String])
-
-case class UnknownPropertiesTestHelper(bar: Int)
-
-case class NullPropertiesTestHelper(a: String, b: String, c: Option[String], d: Option[String])
 
 class JsonMarshallerTest extends FunSuite {
   val jsonMarshaller: JsonMarshaller = new JsonMarshallerImpl
@@ -82,6 +77,22 @@ class JsonMarshallerTest extends FunSuite {
   }
   test("merge map into map") {
     assert(merge( """{"a":1, "b":2, "c":3}""", """{"b":3, "c":null, "d":4}""") === normalize( """{"a":1, "b":3, "d":4}"""))
+  }
+  test("java 8 time types") {
+    val epochMilli = 1445550663281L
+    val zoneId = ZoneId.of("America/Los_Angeles")
+    val instant = Instant.ofEpochMilli(epochMilli)
+    val theObject = SampleTimeTypes(
+      instant = instant,
+      duration = Duration.of(5, ChronoUnit.MINUTES),
+      localDateTime = LocalDateTime.ofInstant(instant, zoneId),
+      localDate = LocalDate.of(2008, 12, 21),
+      localTime = LocalTime.of(13, 30, 25),
+      zoneId = zoneId,
+      zonedDateTime = ZonedDateTime.ofInstant(instant, zoneId)
+    )
+    val jsonText = jsonMarshaller.toJson(theObject)
+    println(jsonText)
   }
 
   def merge(a: String, b: String): String = {
