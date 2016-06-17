@@ -13,8 +13,8 @@
         <module>json</module>
         <module>zip</module>
         <module>system</module>
-        <module>collection</module>
         <module>string</module>
+        <module>compare</module>
     </modules>
     <dependencyManagement>
         <dependencies>
