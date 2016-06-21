@@ -15,7 +15,7 @@ class JsonMarshallerImpl extends JsonMarshaller {
   mapper.registerModule(DefaultScalaModule)
   mapper.registerModule(new JavaTimeModule())
   mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-  mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+  mapper.setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
   mapper.configure(SerializationFeature.INDENT_OUTPUT, true)
 
   override def toJson[T](theObject: T): String = {
