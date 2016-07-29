@@ -6,7 +6,7 @@
 
     <!-- The Basics -->
     <!--<groupId>...</groupId>-->
-    <artifactId>utility-zip</artifactId>
+    <artifactId>utility-exec</artifactId>
     <!--<version>...</version>-->
     <!--<packaging>...</packaging>-->
     <dependencies>

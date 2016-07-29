@@ -3,7 +3,7 @@ package com.seanshubin.utility.json
 import org.scalatest.FunSuite
 
 class DynamicJsonTest extends FunSuite {
-  val jsonMarshaller: JsonMarshaller = new JsonMarshallerImpl
+  val jsonMarshaller: JsonMarshaller = JacksonJsonMarshaller
   test("dynamic json") {
     val sampleJson =
       """{

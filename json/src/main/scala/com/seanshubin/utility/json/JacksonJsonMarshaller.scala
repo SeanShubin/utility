@@ -10,13 +10,14 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 import scala.collection.JavaConversions
 
-class JsonMarshallerImpl extends JsonMarshaller {
+object JacksonJsonMarshaller extends JsonMarshaller {
   private val mapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
   mapper.registerModule(new JavaTimeModule())
   mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
   mapper.setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
   mapper.configure(SerializationFeature.INDENT_OUTPUT, true)
+  mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
 
   override def toJson[T](theObject: T): String = {
     val stringWriter = new StringWriter
