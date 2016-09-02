@@ -16,4 +16,25 @@ object StringUtil {
   }
 
   def doubleQuote(target: String) = s""""${escape(target)}""""
+
+  def unescape(target: String): String = {
+    target.
+      replaceAll( """\\n""", "\n").
+      replaceAll( """\\b""", "\b").
+      replaceAll( """\\t""", "\t").
+      replaceAll( """\\f""", "\f").
+      replaceAll( """\\r""", "\r").
+      replaceAll( """\\"""", "\"").
+      replaceAll( """\\'""", "\'").
+      replaceAll( """\\\\""", "\\")
+  }
+
+  def hex(target: Seq[Byte]): String = {
+    target.map(hex).mkString
+  }
+
+  def hex(target: Byte): String = {
+    val digits = "0123456789ABCDEF"
+    "" + digits(target >> 4 & 15) + digits(target & 15)
+  }
 }
