@@ -43,7 +43,7 @@ object StringUtil {
   }
 
   def hexToByte(rawTarget:String):Byte = {
-    if(rawTarget.length != 2) throw new RuntimeException("hexToByte expectes exactly 2 characters")
+    if (rawTarget.length != 2) throw new RuntimeException("hexToByte expects exactly 2 characters")
     val target = rawTarget.toUpperCase
     val numericTuples = 0 to 9 map (x => x.toString.head -> x)
     val alphaTuples = 'A' to 'F' map (x => x -> (x - 'A' + 10))
