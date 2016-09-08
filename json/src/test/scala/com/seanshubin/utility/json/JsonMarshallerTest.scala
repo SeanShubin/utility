@@ -41,8 +41,8 @@ class JsonMarshallerTest extends FunSuite {
       case ex: RuntimeException =>
         val expectedMessage =
           "Error while attempting to parse \"{ \\\"a\\\" : \\\"b\\\" \": " +
-            "Unexpected end-of-input: expected close marker for OBJECT " +
-            "(from [Source: { \"a\" : \"b\" ; line: 1, column: 1])\n" +
+            "Unexpected end-of-input: expected close marker for Object " +
+            "(start marker at [Source: { \"a\" : \"b\" ; line: 1, column: 1])\n" +
             " at [Source: { \"a\" : \"b\" ; line: 1, column: 25]"
         val actualMessage = ex.getMessage
         assert(actualMessage === expectedMessage)
