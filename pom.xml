@@ -51,7 +51,6 @@
         <module>file-system</module>
         <module>json</module>
         <module>zip</module>
-        <module>system</module>
         <module>string</module>
         <module>compare</module>
         <module>exec</module>
