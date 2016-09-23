@@ -31,6 +31,13 @@ object SeqDifference {
     buildSeqDifference(0, Nil, a.toList, b.toList)
   }
 
+  def multilineStringDiff(a:String, b:String):DifferenceResult = {
+    diff(stringToLines(a), stringToLines(b))
+  }
+
+  private def stringToLines(s:String):Seq[String] = s.split("""\r\n|\r|\n""")
+
+
   private def composeSameAtIndex[T](valueAndIndex: (T, Int)): String = {
     val (value, index) = valueAndIndex
     s"same[$index]        = $value"
