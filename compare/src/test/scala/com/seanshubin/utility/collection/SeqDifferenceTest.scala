@@ -62,13 +62,13 @@ class SeqDifferenceTest extends FunSuite {
     val a = "aaa\nbbb\nccc"
     val b = "aaa\r\nddd\r\nccc"
     val difference = SeqDifference.multilineStringDiff(a, b)
+    difference.messageLines.foreach(println)
     assert(difference.isSame === false)
     assert(difference.messageLines ===
       """sequences different at index 1
         |same[0]        = aaa
         |different-a[1] = bbb
         |different-b[1] = ddd
-        |remaining elements skipped
-        | """.stripMargin.split( """\r\n|\r|\n"""))
+        |remaining elements skipped""".stripMargin.split( """\r\n|\r|\n"""))
   }
 }
