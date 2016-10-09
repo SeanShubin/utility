@@ -1,5 +1,7 @@
 package com.seanshubin.utility.string
 
+import scala.annotation.tailrec
+
 object StringUtil {
   def escape(target: String) = {
     target.flatMap {
@@ -18,15 +20,40 @@ object StringUtil {
   def doubleQuote(target: String) = s""""${escape(target)}""""
 
   def unescape(target: String): String = {
-    target.
-      replaceAll( """\\n""", "\n").
-      replaceAll( """\\b""", "\b").
-      replaceAll( """\\t""", "\t").
-      replaceAll( """\\f""", "\f").
-      replaceAll( """\\r""", "\r").
-      replaceAll( """\\"""", "\"").
-      replaceAll( """\\'""", "\'").
-      replaceAll( """\\\\""", "\\")
+    @tailrec
+    def unescapeRemaining(soFar:String, remain:String):String = {
+      if(remain.isEmpty) {
+        soFar
+      } else {
+        val ch = remain.head
+        if(ch == '\\'){
+          unescapeAfterBackslash(soFar, remain.tail)
+        } else {
+          unescapeRemaining(soFar + ch, remain.tail)
+        }
+      }
+    }
+
+    def unescapeAfterBackslash(soFar:String, remain:String):String ={
+      if(remain.isEmpty) {
+        throw new RuntimeException("end of string encountered after backslash")
+      } else {
+        val ch = remain.head
+        val escapeCh = ch match {
+          case 'n' => '\n'
+          case 'b' => '\b'
+          case 't' => '\t'
+          case 'f' => '\f'
+          case 'r' => '\r'
+          case '\"' => '\"'
+          case '\'' => '\''
+          case '\\' => '\\'
+          case x => throw new RuntimeException("Unsupported escape sequence: " + ch)
+        }
+        unescapeRemaining(soFar + escapeCh, remain.tail)
+      }
+    }
+    unescapeRemaining("", target)
   }
 
   def bytesToHex(target: Seq[Byte]): String = {
