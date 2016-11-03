@@ -8,7 +8,7 @@ import java.util
 import com.seanshubin.utility.filesystem.FileSystemIntegrationFake.Branches
 
 import scala.annotation.tailrec
-import scala.collection.JavaConversions
+import scala.collection.JavaConverters._
 import scala.collection.immutable.ListMap
 import scala.collection.mutable.ArrayBuffer
 
@@ -82,7 +82,7 @@ class FileSystemIntegrationFake extends FileSystemIntegration {
 
   override def write(path: Path, javaLines: java.lang.Iterable[_ <: CharSequence], charset: Charset): Path = {
     val writer = new PrintWriter(newBufferedWriter(path, charset))
-    val scalaLines = JavaConversions.iterableAsScalaIterable(javaLines)
+    val scalaLines = javaLines.asScala
     for {
       line <- scalaLines
     } {
@@ -144,7 +144,7 @@ class FileSystemIntegrationFake extends FileSystemIntegration {
   }
 
   private def pathToPathParts(path: Path): List[String] = {
-    val pathParts = JavaConversions.asScalaIterator(path.iterator()).map(_.toString).toList
+    val pathParts = path.iterator().asScala.map(_.toString).toList
     val newHead = if (path.isAbsolute) {
       "/" + pathParts.head
     } else {

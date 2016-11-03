@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper, Ser
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
-import scala.collection.JavaConversions
+import scala.collection.JavaConverters._
 
 object JacksonJsonMarshaller extends JsonMarshaller {
   private val mapper = new ObjectMapper()
@@ -40,7 +40,7 @@ object JacksonJsonMarshaller extends JsonMarshaller {
   override def fromJsonArray[T](json: String, theElementClass: Class[T]): Seq[T] = {
     val collectionType = mapper.getTypeFactory.constructCollectionType(classOf[java.util.List[T]], theElementClass)
     val myObjects: java.util.List[T] = mapper.readValue(json, collectionType)
-    JavaConversions.collectionAsScalaIterable(myObjects).toSeq
+    myObjects.asScala
   }
 
   override def normalize(json: String): String = {
