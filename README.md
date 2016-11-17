@@ -1,6 +1,10 @@
 Utilities
 ===
 
+Do not depend on this project directly.
+This is a temporary area for utility projects that have not been vetted yet.
+Once a utility is properly vetted, it should be pulled out into its own separate project.
+
 While separate utilities can simplify your code base by reducing duplicate code, they complicate your dependency structure.
 Be sure the trade off is worth it.
 Most importantly, understand the stable dependencies principle.

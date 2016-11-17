@@ -52,6 +52,7 @@
         <module>compare</module>
         <module>exec</module>
         <module>exec-test-app</module>
+        <module>http</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -78,6 +79,11 @@
                         <jvmArg>-Xms64m</jvmArg>
                         <jvmArg>-Xmx1024m</jvmArg>
                     </jvmArgs>
+                    <args>
+                        <arg>-unchecked</arg>
+                        <arg>-deprecation</arg>
+                        <arg>-feature</arg>
+                    </args>
                 </configuration>
             </plugin>
             <plugin>
