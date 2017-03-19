@@ -22,15 +22,17 @@ class TableUtilTest extends FunSuite {
   }
 
   test("left and right justify") {
+    import TableUtil.LeftJustify
+    import TableUtil.RightJustify
     val bigInt = BigInt(2)
     val bigDec = BigDecimal(3)
     val input = Seq(
       Seq("left justify column name", "default justification column name", "right justify column name"),
-      Seq(TableUtil.LeftJustify("left"), "default", TableUtil.RightJustify("right")),
-      Seq(TableUtil.LeftJustify(null), null, TableUtil.RightJustify(null)),
-      Seq(TableUtil.LeftJustify(1), 1, TableUtil.RightJustify(1)),
-      Seq(TableUtil.LeftJustify(bigInt), bigInt, TableUtil.RightJustify(bigInt)),
-      Seq(TableUtil.LeftJustify(bigDec), bigDec, TableUtil.RightJustify(bigDec)))
+      Seq(LeftJustify("left"), "default", RightJustify("right")),
+      Seq(LeftJustify(null), null, RightJustify(null)),
+      Seq(LeftJustify(1), 1, RightJustify(1)),
+      Seq(LeftJustify(bigInt), bigInt, RightJustify(bigInt)),
+      Seq(LeftJustify(bigDec), bigDec, RightJustify(bigDec)))
     val expected = Seq(
       "╔════════════════════════╤═════════════════════════════════╤═════════════════════════╗",
       "║left justify column name│default justification column name│right justify column name║",
