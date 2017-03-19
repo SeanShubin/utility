@@ -68,12 +68,11 @@ object TableUtil {
   }
 
   private def interleave[T](data: Seq[T], separator: T): Seq[T] = {
-    def combine(soFar: Seq[T], next: T): Seq[T] = {
-      //todo: can we make soFar a list?  Does that require a fold right and reverse?
-      soFar :+ separator :+ next
+    def combine(soFar: List[T], next: T): List[T] = {
+      next :: separator :: soFar
     }
 
-    data.tail.foldLeft(Seq(data.head))(combine)
+    data.tail.foldLeft(List(data.head))(combine).reverse
   }
 
   private def maxWidthForColumn(column: Seq[Any]): Int = {
