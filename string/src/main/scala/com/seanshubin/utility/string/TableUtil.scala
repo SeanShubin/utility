@@ -18,16 +18,18 @@ object TableUtil {
     Seq(top) ++ interleave(formattedRows, middle) ++ Seq(bottom)
   }
 
+  private val emptyRow = Stream.continually("")
+
   private def makeTop(columnWidths: Seq[Int]): String = {
-    makeRow(columnWidths, Stream.continually(""), "═", "╔", "╤", "╗")
+    makeRow(columnWidths, emptyRow, "═", "╔", "╤", "╗")
   }
 
   private def makeMiddle(columnWidths: Seq[Int]): String = {
-    makeRow(columnWidths, Stream.continually(""), "─", "╟", "┼", "╢")
+    makeRow(columnWidths, emptyRow, "─", "╟", "┼", "╢")
   }
 
   private def makeBottom(columnWidths: Seq[Int]): String = {
-    makeRow(columnWidths, Stream.continually(""), "═", "╚", "╧", "╝")
+    makeRow(columnWidths, emptyRow, "═", "╚", "╧", "╝")
   }
 
   private def makeRow(columnWidths: Seq[Int], data: Seq[Any], padding: String, left: String, center: String, right: String): String = {
