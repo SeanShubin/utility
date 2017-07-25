@@ -1,6 +1,6 @@
 package com.seanshubin.utility.exec
 
-import java.io._
+import java.io.{InputStream, OutputStream}
 import java.util.concurrent.TimeUnit
 
 trait ProcessContract {

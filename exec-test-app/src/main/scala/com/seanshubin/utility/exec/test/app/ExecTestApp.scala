@@ -18,7 +18,9 @@ object ExecTestApp extends App {
     "  err 5",
     "    sends the provided number of lines to standard error"
   )
+  val argumentLines = s"Command line arguments: ${args.size}" +: args.zipWithIndex.map(formatArgument)
 
+  arguments()
   syntax()
   processRemainingLines()
 
@@ -84,6 +86,10 @@ object ExecTestApp extends App {
     syntaxLines.foreach(println)
   }
 
+  def arguments(): Unit = {
+    argumentLines.foreach(println)
+  }
+
   def syntax(badCommand: String): Unit = {
     println(s"Unable to execute: $badCommand")
     syntax()
@@ -95,4 +101,8 @@ object ExecTestApp extends App {
     sendLines(lines, System.err)
   }
 
+  def formatArgument(entry: (String, Int)): String = {
+    val (arg, index) = entry
+    s"  argument[$index] = '$arg'"
+  }
 }
