@@ -92,15 +92,16 @@ class JsonMarshallerTest extends FunSuite {
       zonedDateTime = ZonedDateTime.ofInstant(instant, zoneId)
     )
     val jsonText = jsonMarshaller.toJson(theObject)
-    val expected = """{
-                     |  "instant" : "2015-10-22T21:51:03.281Z",
-                     |  "duration" : "PT5M",
-                     |  "localDateTime" : "2015-10-22T14:51:03.281",
-                     |  "localDate" : "2008-12-21",
-                     |  "localTime" : "13:30:25",
-                     |  "zoneId" : "America/Los_Angeles",
-                     |  "zonedDateTime" : "2015-10-22T14:51:03.281-07:00"
-                     |}""".stripMargin
+    val expected =
+      """{
+        |  "instant" : "2015-10-22T21:51:03.281Z",
+        |  "duration" : "PT5M",
+        |  "localDateTime" : "2015-10-22T14:51:03.281",
+        |  "localDate" : "2008-12-21",
+        |  "localTime" : "13:30:25",
+        |  "zoneId" : "America/Los_Angeles",
+        |  "zonedDateTime" : "2015-10-22T14:51:03.281-07:00"
+        |}""".stripMargin
     assert(jsonText === expected)
   }
 

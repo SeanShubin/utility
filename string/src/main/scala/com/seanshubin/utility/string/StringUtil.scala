@@ -21,12 +21,12 @@ object StringUtil {
 
   def unescape(target: String): String = {
     @tailrec
-    def unescapeRemaining(soFar:String, remain:String):String = {
-      if(remain.isEmpty) {
+    def unescapeRemaining(soFar: String, remain: String): String = {
+      if (remain.isEmpty) {
         soFar
       } else {
         val ch = remain.head
-        if(ch == '\\'){
+        if (ch == '\\') {
           unescapeAfterBackslash(soFar, remain.tail)
         } else {
           unescapeRemaining(soFar + ch, remain.tail)
@@ -34,8 +34,8 @@ object StringUtil {
       }
     }
 
-    def unescapeAfterBackslash(soFar:String, remain:String):String ={
-      if(remain.isEmpty) {
+    def unescapeAfterBackslash(soFar: String, remain: String): String = {
+      if (remain.isEmpty) {
         throw new RuntimeException("end of string encountered after backslash")
       } else {
         val ch = remain.head
@@ -53,6 +53,7 @@ object StringUtil {
         unescapeRemaining(soFar + escapeCh, remain.tail)
       }
     }
+
     unescapeRemaining("", target)
   }
 
@@ -65,11 +66,11 @@ object StringUtil {
     "" + digits(target >> 4 & 15) + digits(target & 15)
   }
 
-  def hexToBytes(target:String):Seq[Byte] = {
+  def hexToBytes(target: String): Seq[Byte] = {
     target.grouped(2).map(hexToByte).toSeq
   }
 
-  def hexToByte(rawTarget:String):Byte = {
+  def hexToByte(rawTarget: String): Byte = {
     if (rawTarget.length != 2) throw new RuntimeException("hexToByte expects exactly 2 characters")
     val target = rawTarget.toUpperCase
     val numericTuples = 0 to 9 map (x => x.toString.head -> x)

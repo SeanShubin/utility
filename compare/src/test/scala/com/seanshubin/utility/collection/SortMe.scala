@@ -1,6 +1,6 @@
 package com.seanshubin.utility.collection
 
-case class SortMe(id: Int, name: String){
+case class SortMe(id: Int, name: String) {
 
   //Convenient alternative to: SortMe.unapply(_).get
   private def tupleIdName = (id, name)

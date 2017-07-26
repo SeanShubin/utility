@@ -22,28 +22,31 @@ class RegexTest extends FunSuite {
     "<\">" -> "\""
   )
   test("foo") {
-        verify(name = "CHAR", expectedMatches = 128, samples = '\n', 'A', '$')
-        verify(name = "UPALPHA", expectedMatches = 26, samples = 'A', 'B', 'Z')
-        verify(name = "LOALPHA", expectedMatches = 26, samples = 'a', 'b', 'z')
-        verify(name = "ALPHA", expectedMatches = 52, samples = 'a', 'B', 'z')
-        verify(name = "DIGIT", expectedMatches = 10, samples = '0', '1', '9')
-        verify(name = "CTL", expectedMatches = 33, samples = '\u0000', 31, 127)
-        verify(name = "CR", expectedMatches = 1, samples = 13)
-        verify(name = "LF", expectedMatches = 1, samples = 10)
-        verify(name = "SP", expectedMatches = 1, samples = 32)
-        verify(name = "HT", expectedMatches = 1, samples = 9)
-        verify(name = "<\">", expectedMatches = 1, samples = 34)
+    verify(name = "CHAR", expectedMatches = 128, samples = '\n', 'A', '$')
+    verify(name = "UPALPHA", expectedMatches = 26, samples = 'A', 'B', 'Z')
+    verify(name = "LOALPHA", expectedMatches = 26, samples = 'a', 'b', 'z')
+    verify(name = "ALPHA", expectedMatches = 52, samples = 'a', 'B', 'z')
+    verify(name = "DIGIT", expectedMatches = 10, samples = '0', '1', '9')
+    verify(name = "CTL", expectedMatches = 33, samples = '\u0000', 31, 127)
+    verify(name = "CR", expectedMatches = 1, samples = 13)
+    verify(name = "LF", expectedMatches = 1, samples = 10)
+    verify(name = "SP", expectedMatches = 1, samples = 32)
+    verify(name = "HT", expectedMatches = 1, samples = 9)
+    verify(name = "<\">", expectedMatches = 1, samples = 34)
 
   }
 
   def verify(name: String, expectedMatches: Int, samples: Char*): Unit = {
     val pattern = Pattern.compile(regexMap(name))
+
     def isMatch(sample: Char): Boolean = {
       pattern.matcher(sample.toString).matches()
     }
+
     def assertMatch(sample: Char): Unit = {
       assert(pattern.matcher(sample.toString).matches(), name + ": " + sample)
     }
+
     val actualMatches = sampleString.count(isMatch)
     assert(actualMatches === expectedMatches, name)
 

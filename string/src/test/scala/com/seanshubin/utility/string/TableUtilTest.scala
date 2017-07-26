@@ -22,8 +22,7 @@ class TableUtilTest extends FunSuite {
   }
 
   test("left and right justify") {
-    import TableUtil.LeftJustify
-    import TableUtil.RightJustify
+    import TableUtil.{LeftJustify, RightJustify}
     val bigInt = BigInt(2)
     val bigDec = BigDecimal(3)
     val input = Seq(

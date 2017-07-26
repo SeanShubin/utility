@@ -193,6 +193,7 @@ object FileSystemIntegrationFake {
 
     def toIndentedMultipleLineString(depth: Int): Seq[String] = {
       def treeToMultipleLineString(tree: Tree): Seq[String] = tree.toIndentedMultipleLineString(depth)
+
       val lines = trees.flatMap(treeToMultipleLineString)
       lines
     }
@@ -246,6 +247,7 @@ object FileSystemIntegrationFake {
 
     private def indexOf(name: String): Int = {
       def nameMatches(tree: Tree) = tree.name == name
+
       trees.indexWhere(nameMatches)
     }
 

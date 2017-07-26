@@ -11,6 +11,7 @@ object SeqDifference {
         val isSame = false
         DifferenceResult(isSame, messageLines)
       }
+
       (remainA, remainB) match {
         case (headA :: tailA, headB :: tailB) =>
           if (headA == headB) {
@@ -28,14 +29,15 @@ object SeqDifference {
           DifferenceResult(isSame, messageLines)
       }
     }
+
     buildSeqDifference(0, Nil, a.toList, b.toList)
   }
 
-  def multilineStringDiff(a:String, b:String):DifferenceResult = {
+  def multilineStringDiff(a: String, b: String): DifferenceResult = {
     diff(stringToLines(a), stringToLines(b))
   }
 
-  private def stringToLines(s:String):Seq[String] = s.split("""\r\n|\r|\n""")
+  private def stringToLines(s: String): Seq[String] = s.split("""\r\n|\r|\n""")
 
 
   private def composeSameAtIndex[T](valueAndIndex: (T, Int)): String = {
