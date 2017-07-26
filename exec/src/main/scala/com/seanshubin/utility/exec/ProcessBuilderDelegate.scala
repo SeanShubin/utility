@@ -4,8 +4,6 @@ import java.io.File
 import java.util
 
 class ProcessBuilderDelegate(delegate: ProcessBuilder) extends ProcessBuilderContract {
-  override def command(command: util.List[String]): ProcessBuilderContract = new ProcessBuilderDelegate(delegate.command(command))
-
   override def command(command: String*): ProcessBuilderContract = new ProcessBuilderDelegate(delegate.command(command: _*))
 
   override def directory(directory: File): ProcessBuilderContract = new ProcessBuilderDelegate(delegate.directory(directory))
