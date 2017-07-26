@@ -41,9 +41,9 @@ class ProcessLauncherTest extends FunSuite {
     val environment = Map("some" -> "environment")
     val input = ProcessInput(command, directory, environment)
     val expected = ProcessOutput(
-      123,
-      Seq("input", "text", "lines"),
-      Seq("error", "text", "lines"),
+      exitCode = 123,
+      outputLines = Seq("input", "text", "lines"),
+      errorLines = Seq("error", "text", "lines"),
       started,
       ended)
 
