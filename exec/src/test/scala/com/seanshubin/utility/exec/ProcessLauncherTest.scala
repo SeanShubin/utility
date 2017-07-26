@@ -61,9 +61,10 @@ class ProcessLauncherTest extends FunSuite {
   def verifyFuture(future: Future[ProcessOutput], expected: ProcessOutput): Unit = {
     future.value match {
       case Some(Failure(ex)) =>
-        ex.printStackTrace()
+        ex.printStackTrace() // pull out the stack trace that got buried in the future
         fail()
       case Some(Success(actual)) => assert(actual === expected)
+      case None => fail("The execution context stub is synchronous, so the future should always be resolved by the time we get here")
     }
   }
 
@@ -90,6 +91,7 @@ class ProcessLauncherTest extends FunSuite {
   }
 
   class ExecutionContextStub extends ExecutionContext {
+    // we are not testing different orders of resolution, so just run it synchronously
     override def execute(runnable: Runnable): Unit = runnable.run()
 
     override def reportFailure(cause: Throwable): Unit = ???
@@ -99,8 +101,6 @@ class ProcessLauncherTest extends FunSuite {
     val javaMap = new util.HashMap[String, String]()
     val commandInvocations = new ArrayBuffer[Seq[String]]
     val directoryInvocations = new ArrayBuffer[File]
-
-    override def command(command: util.List[String]): ProcessBuilderContract = ???
 
     override def command(command: String*): ProcessBuilderContract = {
       commandInvocations.append(command)
