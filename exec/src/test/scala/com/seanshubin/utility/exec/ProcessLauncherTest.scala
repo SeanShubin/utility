@@ -61,7 +61,7 @@ class ProcessLauncherTest extends FunSuite {
   def verifyFuture(future: Future[ProcessOutput], expected: ProcessOutput): Unit = {
     future.value match {
       case Some(Failure(ex)) =>
-        ex.printStackTrace() // pull out the stack trace that got buried in the future
+        ex.printStackTrace() // pull out the stack trace that got buried in the future, otherwise it is difficult to figure out why the test failed
         fail()
       case Some(Success(actual)) => assert(actual === expected)
       case None => fail("The execution context stub is synchronous, so the future should always be resolved by the time we get here")
