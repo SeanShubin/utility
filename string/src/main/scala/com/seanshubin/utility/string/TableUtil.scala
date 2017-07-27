@@ -88,6 +88,8 @@ object TableUtil {
   private def cellToString(cell: Any): String = {
     cell match {
       case null => "null"
+      case LeftJustify(x) => cellToString(x)
+      case RightJustify(x) => cellToString(x)
       case x => x.toString
     }
   }

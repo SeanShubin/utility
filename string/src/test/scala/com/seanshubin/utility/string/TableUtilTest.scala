@@ -1,5 +1,6 @@
 package com.seanshubin.utility.string
 
+import com.seanshubin.utility.string.TableUtil.{LeftJustify, RightJustify}
 import org.scalatest.FunSuite
 
 class TableUtilTest extends FunSuite {
@@ -49,5 +50,11 @@ class TableUtilTest extends FunSuite {
     )
     val actual = TableUtil.createTable(input)
     assert(actual === expected)
+  }
+
+  test("left and right justify something small") {
+    assert(TableUtil.createTable(Seq(Seq("a"))) === Seq("╔═╗", "║a║", "╚═╝"))
+    assert(TableUtil.createTable(Seq(Seq(LeftJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
+    assert(TableUtil.createTable(Seq(Seq(RightJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
   }
 }
