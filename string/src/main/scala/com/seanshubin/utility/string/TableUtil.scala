@@ -74,7 +74,11 @@ object TableUtil {
       next :: separator :: soFar
     }
 
-    data.tail.foldLeft(List(data.head))(combine).reverse
+    if (data.isEmpty) {
+      Seq()
+    } else {
+      data.tail.foldLeft(List(data.head))(combine).reverse
+    }
   }
 
   private def maxWidthForColumn(column: Seq[Any]): Int = {

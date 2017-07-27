@@ -57,4 +57,12 @@ class TableUtilTest extends FunSuite {
     assert(TableUtil.createTable(Seq(Seq(LeftJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
     assert(TableUtil.createTable(Seq(Seq(RightJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
   }
+
+  test("no columns") {
+    assert(TableUtil.createTable(Seq(Seq())) === Seq("╔╗", "║║", "╚╝"))
+  }
+
+  test("no rows") {
+    assert(TableUtil.createTable(Seq()) === Seq("╔╗", "╚╝"))
+  }
 }
