@@ -65,4 +65,12 @@ class TableUtilTest extends FunSuite {
   test("no rows") {
     assert(TableUtil.createTable(Seq()) === Seq("╔╗", "╚╝"))
   }
+
+  test("replace empty cells with blank cells") {
+    val input = Seq(
+      Seq("Alice", "Bob", "Carol"),
+      Seq("Dave", "Eve"),
+      Seq("Peggy", "Trent", "Wendy"))
+    TableUtil.createTable(input).foreach(println)
+  }
 }

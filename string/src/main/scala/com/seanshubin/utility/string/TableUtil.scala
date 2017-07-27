@@ -8,14 +8,32 @@ object TableUtil {
 
   case class RightJustify(x: Any) extends Justify
 
-  def createTable(rows: Seq[Seq[Any]]): Seq[String] = {
-    val columns = rows.transpose
+  def createTable(originalRows: Seq[Seq[Any]]): Seq[String] = {
+    val paddedRows = makeAllRowsTheSameSize(originalRows, "")
+    val columns = paddedRows.transpose
     val columnWidths = columns.map(maxWidthForColumn)
     val top = makeTop(columnWidths)
     val middle = makeMiddle(columnWidths)
     val bottom = makeBottom(columnWidths)
-    val formattedRows = formatRows(columnWidths, rows)
+    val formattedRows = formatRows(columnWidths, paddedRows)
     Seq(top) ++ interleave(formattedRows, middle) ++ Seq(bottom)
+  }
+
+  private def makeAllRowsTheSameSize(rows: Seq[Seq[Any]], value: Any): Seq[Seq[Any]] = {
+    val rowSizes = rows.map(_.size)
+    val targetSize = if (rowSizes.isEmpty) 0 else rowSizes.max
+
+    def makeRowSameSize(row: Seq[Any]): Seq[Any] = {
+      val extraCells = makeExtraCells(targetSize - row.size, value)
+      row ++ extraCells
+    }
+
+    val sameSizeRows = rows.map(makeRowSameSize)
+    sameSizeRows
+  }
+
+  private def makeExtraCells(howMany: Int, contents: Any): Seq[Any] = {
+    (1 to howMany).map(_ => contents)
   }
 
   private val emptyRow = Stream.continually("")
