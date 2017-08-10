@@ -6,7 +6,7 @@ import java.time.Clock
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object DefaultProcessLauncher {
-  val createProcessBuilder: () => ProcessBuilderContract = ProcessBuilderDelegate.apply
+  val createProcessBuilder: () => ProcessBuilderContract = ProcessBuilderDelegate.apply _
   val futureRunner: FutureRunner = new ExecutionContextFutureRunner()
   val clock: Clock = Clock.systemUTC()
   val charset: Charset = StandardCharsets.UTF_8
