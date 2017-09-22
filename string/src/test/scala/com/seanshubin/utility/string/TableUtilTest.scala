@@ -71,6 +71,16 @@ class TableUtilTest extends FunSuite {
       Seq("Alice", "Bob", "Carol"),
       Seq("Dave", "Eve"),
       Seq("Peggy", "Trent", "Wendy"))
-    TableUtil.createTable(input).foreach(println)
+    val expected = Seq(
+      "╔═════╤═════╤═════╗",
+      "║Alice│Bob  │Carol║",
+      "╟─────┼─────┼─────╢",
+      "║Dave │Eve  │     ║",
+      "╟─────┼─────┼─────╢",
+      "║Peggy│Trent│Wendy║",
+      "╚═════╧═════╧═════╝"
+    )
+    val actual = TableUtil.createTable(input)
+    assert(actual === expected)
   }
 }

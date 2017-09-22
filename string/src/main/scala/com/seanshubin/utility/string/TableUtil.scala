@@ -66,25 +66,12 @@ object TableUtil {
 
   private def formatCell(cell: Any, width: Int, padding: String): String = {
     cell match {
-      case LeftJustify(x) => leftJustify(cellToString(x), width, padding)
-      case RightJustify(x) => rightJustify(cellToString(x), width, padding)
-      case null => rightJustify(cellToString(cell), width, padding)
-      case _: String => leftJustify(cellToString(cell), width, padding)
-      case _ => rightJustify(cellToString(cell), width, padding)
+      case LeftJustify(x) => JustifyUtil.leftJustify(cellToString(x), width, padding)
+      case RightJustify(x) => JustifyUtil.rightJustify(cellToString(x), width, padding)
+      case null => JustifyUtil.rightJustify(cellToString(cell), width, padding)
+      case _: String => JustifyUtil.leftJustify(cellToString(cell), width, padding)
+      case _ => JustifyUtil.rightJustify(cellToString(cell), width, padding)
     }
-  }
-
-  private def rightJustify(s: String, width: Int, padding: String): String = {
-    paddingFor(s, width, padding) + s
-  }
-
-  private def leftJustify(s: String, width: Int, padding: String): String = {
-    s + paddingFor(s, width, padding)
-  }
-
-  private def paddingFor(s: String, width: Int, padding: String): String = {
-    val quantity = width - s.length
-    padding * quantity
   }
 
   private def interleave[T](data: Seq[T], separator: T): Seq[T] = {
