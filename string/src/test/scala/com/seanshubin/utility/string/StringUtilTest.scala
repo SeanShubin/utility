@@ -24,4 +24,8 @@ class StringUtilTest extends FunSuite {
     assert(StringUtil.unescape("""blah\'blah""") === "blah\'blah")
     assert(StringUtil.unescape("""blah\\blah""") === "blah\\blah")
   }
+
+  test("to lines"){
+    assert(StringUtil.toLines("a\nb\r\nc\rd") === Seq("a", "b", "c", "d"))
+  }
 }

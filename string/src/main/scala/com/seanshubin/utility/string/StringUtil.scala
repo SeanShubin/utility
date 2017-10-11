@@ -81,4 +81,8 @@ object StringUtil {
     val result = firstDigit * 16 + secondDigit
     result.toByte
   }
+
+  def toLines(s:String):Seq[String] = {
+    s.split("\r\n|\r|\n")
+  }
 }
