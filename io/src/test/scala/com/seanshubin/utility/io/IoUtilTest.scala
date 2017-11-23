@@ -1,13 +1,13 @@
 package com.seanshubin.utility.io
 
 import java.io.ByteArrayOutputStream
-import java.nio.charset.StandardCharsets
+import java.nio.charset.{Charset, StandardCharsets}
 
 import com.seanshubin.utility.io.IoUtil._
 import org.scalatest.FunSuite
 
 class IoUtilTest extends FunSuite {
-  val charset = StandardCharsets.UTF_8
+  val charset: Charset = StandardCharsets.UTF_8
   test("bytes") {
     val inputStream = stringToInputStream("Hello, world!", charset)
     val string = inputStreamToString(inputStream, charset)
