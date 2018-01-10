@@ -1,0 +1,47 @@
+{
+  prefix [com seanshubin]
+  name [utility]
+  description 'A collection of utility code meant to be copied into other projects as needed'
+  version 0.1-SNAPSHOT
+  developer {
+    name 'Sean Shubin'
+    githubName SeanShubin
+    mavenUserName SeanShubin
+    organization 'Sean Shubin'
+    url http://seanshubin.com/
+  }
+  dependencies {
+    scala-library {
+      group org.scala-lang
+      artifact scala-library
+    }
+    scala-test {
+      group org.scalatest
+      artifact scalatest_2.12
+      scope test
+    }
+    jackson-scala {
+      group com.fasterxml.jackson.module
+      artifact jackson-module-scala_2.12
+    }
+    jackson-datatype {
+      group com.fasterxml.jackson.datatype
+      artifact jackson-datatype-jsr310
+    }
+  }
+  modules {
+    compare       []
+    exec          []
+    exec-test-app []
+    file-system   []
+    http          []
+    io            []
+    json          [jackson-scala jackson-datatype]
+    string        []
+    zip           []
+  }
+  detangler [compare exec exec-test-app file-system http io json string zip]
+  consoleEntryPoint {
+    exec-test-app com.seanshubin.utility.exec.test.app.ExecTestApp
+  }
+}

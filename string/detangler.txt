@@ -1,0 +1,31 @@
+{
+  reportDir string/target/detangled
+  searchPaths
+  [
+    ./string/target/utility-string-0.1-SNAPSHOT.jar
+  ]
+  level 2
+  startsWith
+  {
+    include
+    [
+      [
+        com
+        seanshubin
+        utility
+      ]
+    ]
+    exclude []
+    drop
+    [
+      [
+        com
+        seanshubin
+        utility
+      ]
+    ]
+  }
+  ignoreFiles []
+  canFailBuild true
+  allowedInCycle string/detangler-allowed-in-cycle.txt
+}
