@@ -29,6 +29,7 @@
       artifact jackson-datatype-jsr310
     }
   }
+  global [scala-library scala-test]
   modules {
     compare       []
     exec          []
