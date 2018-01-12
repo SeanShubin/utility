@@ -52,6 +52,7 @@
         <module>json</module>
         <module>string</module>
         <module>zip</module>
+        <module>duration-format</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

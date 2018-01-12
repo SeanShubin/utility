@@ -31,15 +31,16 @@
   }
   global [scala-library scala-test]
   modules {
-    compare       []
-    exec          []
-    exec-test-app []
-    file-system   []
-    http          []
-    io            []
-    json          [jackson-scala jackson-datatype]
-    string        []
-    zip           []
+    compare         []
+    exec            []
+    exec-test-app   []
+    file-system     []
+    http            []
+    io              []
+    json            [jackson-scala jackson-datatype]
+    string          []
+    zip             []
+    duration-format []
   }
   detangler [compare exec exec-test-app file-system http io json string zip]
   consoleEntryPoint {
