@@ -41,6 +41,7 @@
     string          []
     zip             []
     duration-format []
+    exception       []
   }
   detangler [compare exec exec-test-app file-system http io json string zip]
   consoleEntryPoint {
