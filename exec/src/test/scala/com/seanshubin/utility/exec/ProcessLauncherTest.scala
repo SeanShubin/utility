@@ -114,6 +114,10 @@ class ProcessLauncherTest extends FunSuite {
 
     override def environment: util.Map[String, String] = javaMap
 
+    override def redirectOutput(redirectToMe: ProcessBuilder.Redirect): ProcessBuilderContract = ???
+
+    override def redirectError(redirectToMe: ProcessBuilder.Redirect): ProcessBuilderContract = ???
+
     override def start: ProcessContract = process
   }
 

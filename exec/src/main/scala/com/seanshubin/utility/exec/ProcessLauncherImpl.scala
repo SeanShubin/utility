@@ -12,12 +12,28 @@ class ProcessLauncherImpl(createProcessBuilder: () => ProcessBuilderContract,
                           clock: Clock,
                           charset: Charset)(implicit executionContext: ExecutionContext) extends ProcessLauncher {
   override def launch(input: ProcessInput): Future[ProcessOutput] = {
+    launch(input, None, None)
+  }
+
+  override def launch(input: ProcessInput, redirectBoth: ProcessBuilder.Redirect): Future[ProcessOutput] = {
+    launch(input, Some(redirectBoth), Some(redirectBoth))
+  }
+
+  override def launch(input: ProcessInput, redirectOutput: ProcessBuilder.Redirect, redirectError: ProcessBuilder.Redirect): Future[ProcessOutput] = {
+    launch(input, Some(redirectOutput), Some(redirectError))
+  }
+
+  private def launch(input: ProcessInput,
+                     maybeRedirectOutput: Option[ProcessBuilder.Redirect],
+                     maybeRedirectError: Option[ProcessBuilder.Redirect]): Future[ProcessOutput] = {
     val processBuilder = createProcessBuilder()
     updateEnvironment(processBuilder, input.environment)
     val started = clock.instant()
-    val process = processBuilder.
-      command(input.command: _*).
-      directory(input.directory.toFile).start
+    processBuilder.command(input.command: _*)
+    processBuilder.directory(input.directory.toFile)
+    maybeRedirectOutput.map(processBuilder.redirectOutput)
+    maybeRedirectError.map(processBuilder.redirectError)
+    val process = processBuilder.start
     val standardOutputFuture = captureLines(process.getInputStream)
     val standardErrorFuture = captureLines(process.getErrorStream)
     val exitCodeFuture = captureExitCode(process)

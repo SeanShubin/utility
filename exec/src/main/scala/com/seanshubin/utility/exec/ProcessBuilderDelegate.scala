@@ -10,6 +10,16 @@ class ProcessBuilderDelegate(delegate: ProcessBuilder) extends ProcessBuilderCon
 
   override def environment: util.Map[String, String] = delegate.environment()
 
+  override def redirectOutput(redirectToMe: ProcessBuilder.Redirect): ProcessBuilderContract = {
+    delegate.redirectOutput(redirectToMe)
+    this
+  }
+
+  override def redirectError(redirectToMe: ProcessBuilder.Redirect): ProcessBuilderContract = {
+    delegate.redirectError(redirectToMe)
+    this
+  }
+
   override def start: ProcessContract = new ProcessDelegate(delegate.start())
 }
 
