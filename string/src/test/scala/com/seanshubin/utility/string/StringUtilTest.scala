@@ -28,4 +28,10 @@ class StringUtilTest extends FunSuite {
   test("to lines"){
     assert(StringUtil.toLines("a\nb\r\nc\rd") === Seq("a", "b", "c", "d"))
   }
+
+  test("truncate"){
+    assert(StringUtil.truncate("a" * 5, 10) === "aaaaa")
+    assert(StringUtil.truncate("a" * 10, 10) === "aaaaaaaaaa")
+    assert(StringUtil.truncate("a" * 100, 10) === "<100 characters, showing first 10> aaaaaaaaaa")
+  }
 }

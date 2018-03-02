@@ -85,4 +85,12 @@ object StringUtil {
   def toLines(s:String):Seq[String] = {
     s.split("\r\n|\r|\n")
   }
+
+  def truncate(s:String, max:Int):String = {
+    if(s.length > max){
+      s"<${s.length} characters, showing first $max> ${s.substring(0, max)}"
+    } else {
+      s
+    }
+  }
 }
