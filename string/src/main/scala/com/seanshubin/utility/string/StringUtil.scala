@@ -3,7 +3,7 @@ package com.seanshubin.utility.string
 import scala.annotation.tailrec
 
 object StringUtil {
-  def escape(target: String) = {
+  def escape(target: String): String = {
     target.flatMap {
       case '\n' => "\\n"
       case '\b' => "\\b"
