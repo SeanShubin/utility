@@ -48,7 +48,7 @@ object StringUtil {
           case '\"' => '\"'
           case '\'' => '\''
           case '\\' => '\\'
-          case x => throw new RuntimeException("Unsupported escape sequence: " + ch)
+          case _ => throw new RuntimeException("Unsupported escape sequence: " + ch)
         }
         unescapeRemaining(soFar + escapeCh, remain.tail)
       }
