@@ -11,15 +11,14 @@ class TableFormat(val contentSeparators: Content, val horizontalSeparators: Opti
     this(content, Some(HorizontalSeparators(top, middle, bottom)))
   }
 
-  private val emptyRow = Stream.continually("")
-
-  def createTable(originalRows: Seq[Seq[Any]]): Seq[String] = {
+  def format(originalRows: Seq[Seq[Any]]): Seq[String] = {
     val paddedRows = makeAllRowsTheSameSize(originalRows, "")
     val columns = paddedRows.transpose
     val columnWidths = columns.map(maxWidthForColumn)
     val formattedRows = formatRows(columnWidths, paddedRows, contentSeparators)
     horizontalSeparators match {
       case Some(HorizontalSeparators(topSeparators, middleSeparators, bottomSeparators)) =>
+        val emptyRow = Stream.continually("")
         val top = makeRow(columnWidths, emptyRow, topSeparators)
         val middle = makeRow(columnWidths, emptyRow, middleSeparators)
         val bottom = makeRow(columnWidths, emptyRow, bottomSeparators)
@@ -34,6 +33,7 @@ object TableFormat {
   val BoxDrawingCharacters = new TableFormat(Content(" ", "║", "│", "║"), Top("═", "╔", "╤", "╗"), Middle("─", "╟", "┼", "╢"), Bottom("═", "╚", "╧", "╝"))
   val AsciiDrawingCharacters = new TableFormat(Content(" ", "|", "|", "|"), Top("-", "/", "+", "\\"), Middle("-", "+", "+", "+"), Bottom("-", "\\", "+", "/"))
   val CompactDrawingCharacters = new TableFormat(Content(" ", "", " ", ""))
+
 
   trait VerticalSeparators {
     def padding: String

@@ -20,7 +20,7 @@ class TableFormatTest extends FunSuite {
       "║Peggy│Trent│Wendy  ║",
       "╚═════╧═════╧═══════╝"
     )
-    val actual = tableFormat.createTable(input)
+    val actual = tableFormat.format(input)
     assertLinesEqual(actual, expected)
   }
 
@@ -39,7 +39,7 @@ class TableFormatTest extends FunSuite {
       "|Peggy|Trent|Wendy  |",
       "\\-----+-----+-------/"
     )
-    val actual = tableFormat.createTable(input)
+    val actual = tableFormat.format(input)
     assertLinesEqual(actual, expected)
   }
 
@@ -54,7 +54,7 @@ class TableFormatTest extends FunSuite {
       "Dave  Eve   Mallory",
       "Peggy Trent Wendy  "
     )
-    val actual = tableFormat.createTable(input)
+    val actual = tableFormat.format(input)
     assertLinesEqual(actual, expected)
   }
 
@@ -85,25 +85,25 @@ class TableFormatTest extends FunSuite {
       "║3                       │                                3│                        3║",
       "╚════════════════════════╧═════════════════════════════════╧═════════════════════════╝"
     )
-    val actual = tableFormat.createTable(input)
+    val actual = tableFormat.format(input)
     assertLinesEqual(actual, expected)
   }
 
   test("left and right justify something small") {
     val tableFormat = TableFormat.BoxDrawingCharacters
-    assert(tableFormat.createTable(Seq(Seq("a"))) === Seq("╔═╗", "║a║", "╚═╝"))
-    assert(tableFormat.createTable(Seq(Seq(LeftJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
-    assert(tableFormat.createTable(Seq(Seq(RightJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
+    assert(tableFormat.format(Seq(Seq("a"))) === Seq("╔═╗", "║a║", "╚═╝"))
+    assert(tableFormat.format(Seq(Seq(LeftJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
+    assert(tableFormat.format(Seq(Seq(RightJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
   }
 
   test("no columns") {
     val tableFormat = TableFormat.BoxDrawingCharacters
-    assert(tableFormat.createTable(Seq(Seq())) === Seq("╔╗", "║║", "╚╝"))
+    assert(tableFormat.format(Seq(Seq())) === Seq("╔╗", "║║", "╚╝"))
   }
 
   test("no rows") {
     val tableFormat = TableFormat.BoxDrawingCharacters
-    assert(tableFormat.createTable(Seq()) === Seq("╔╗", "╚╝"))
+    assert(tableFormat.format(Seq()) === Seq("╔╗", "╚╝"))
   }
 
   test("replace empty cells with blank cells") {
@@ -121,7 +121,7 @@ class TableFormatTest extends FunSuite {
       "║Peggy│Trent│Wendy║",
       "╚═════╧═════╧═════╝"
     )
-    val actual = tableFormat.createTable(input)
+    val actual = tableFormat.format(input)
     assertLinesEqual(actual, expected)
   }
 
