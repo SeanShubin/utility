@@ -38,7 +38,7 @@
     http            []
     io              []
     json            [jackson-scala jackson-datatype]
-    string          []
+    string          [compare]
     zip             []
     duration-format []
     exception       []

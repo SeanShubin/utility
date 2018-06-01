@@ -1,10 +1,12 @@
 package com.seanshubin.utility.string
 
-import com.seanshubin.utility.string.TableUtil.{LeftJustify, RightJustify}
+import com.seanshubin.utility.collection.SeqDifference
+import com.seanshubin.utility.string.TableFormat.{LeftJustify, RightJustify}
 import org.scalatest.FunSuite
 
-class TableUtilTest extends FunSuite {
-  test("table") {
+class TableFormatTest extends FunSuite {
+  test("box drawing characters") {
+    val tableFormat = TableFormat.BoxDrawingCharacters
     val input = Seq(
       Seq("Alice", "Bob", "Carol"),
       Seq("Dave", "Eve", "Mallory"),
@@ -18,12 +20,47 @@ class TableUtilTest extends FunSuite {
       "║Peggy│Trent│Wendy  ║",
       "╚═════╧═════╧═══════╝"
     )
-    val actual = TableUtil.createTable(input)
-    assert(actual === expected)
+    val actual = tableFormat.createTable(input)
+    assertLinesEqual(actual, expected)
+  }
+
+  test("plain text characters") {
+    val tableFormat = TableFormat.AsciiDrawingCharacters
+    val input = Seq(
+      Seq("Alice", "Bob", "Carol"),
+      Seq("Dave", "Eve", "Mallory"),
+      Seq("Peggy", "Trent", "Wendy"))
+    val expected = Seq(
+      "/-----+-----+-------\\",
+      "|Alice|Bob  |Carol  |",
+      "+-----+-----+-------+",
+      "|Dave |Eve  |Mallory|",
+      "+-----+-----+-------+",
+      "|Peggy|Trent|Wendy  |",
+      "\\-----+-----+-------/"
+    )
+    val actual = tableFormat.createTable(input)
+    assertLinesEqual(actual, expected)
+  }
+
+  test("compact") {
+    val tableFormat = TableFormat.CompactDrawingCharacters
+    val input = Seq(
+      Seq("Alice", "Bob", "Carol"),
+      Seq("Dave", "Eve", "Mallory"),
+      Seq("Peggy", "Trent", "Wendy"))
+    val expected = Seq(
+      "Alice Bob   Carol  ",
+      "Dave  Eve   Mallory",
+      "Peggy Trent Wendy  "
+    )
+    val actual = tableFormat.createTable(input)
+    assertLinesEqual(actual, expected)
   }
 
   test("left and right justify") {
-    import TableUtil.{LeftJustify, RightJustify}
+    import TableFormat.{LeftJustify, RightJustify}
+    val tableFormat = TableFormat.BoxDrawingCharacters
     val bigInt = BigInt(2)
     val bigDec = BigDecimal(3)
     val input = Seq(
@@ -48,25 +85,29 @@ class TableUtilTest extends FunSuite {
       "║3                       │                                3│                        3║",
       "╚════════════════════════╧═════════════════════════════════╧═════════════════════════╝"
     )
-    val actual = TableUtil.createTable(input)
-    assert(actual === expected)
+    val actual = tableFormat.createTable(input)
+    assertLinesEqual(actual, expected)
   }
 
   test("left and right justify something small") {
-    assert(TableUtil.createTable(Seq(Seq("a"))) === Seq("╔═╗", "║a║", "╚═╝"))
-    assert(TableUtil.createTable(Seq(Seq(LeftJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
-    assert(TableUtil.createTable(Seq(Seq(RightJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
+    val tableFormat = TableFormat.BoxDrawingCharacters
+    assert(tableFormat.createTable(Seq(Seq("a"))) === Seq("╔═╗", "║a║", "╚═╝"))
+    assert(tableFormat.createTable(Seq(Seq(LeftJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
+    assert(tableFormat.createTable(Seq(Seq(RightJustify("a")))) === Seq("╔═╗", "║a║", "╚═╝"))
   }
 
   test("no columns") {
-    assert(TableUtil.createTable(Seq(Seq())) === Seq("╔╗", "║║", "╚╝"))
+    val tableFormat = TableFormat.BoxDrawingCharacters
+    assert(tableFormat.createTable(Seq(Seq())) === Seq("╔╗", "║║", "╚╝"))
   }
 
   test("no rows") {
-    assert(TableUtil.createTable(Seq()) === Seq("╔╗", "╚╝"))
+    val tableFormat = TableFormat.BoxDrawingCharacters
+    assert(tableFormat.createTable(Seq()) === Seq("╔╗", "╚╝"))
   }
 
   test("replace empty cells with blank cells") {
+    val tableFormat = TableFormat.BoxDrawingCharacters
     val input = Seq(
       Seq("Alice", "Bob", "Carol"),
       Seq("Dave", "Eve"),
@@ -80,7 +121,12 @@ class TableUtilTest extends FunSuite {
       "║Peggy│Trent│Wendy║",
       "╚═════╧═════╧═════╝"
     )
-    val actual = TableUtil.createTable(input)
-    assert(actual === expected)
+    val actual = tableFormat.createTable(input)
+    assertLinesEqual(actual, expected)
+  }
+
+  def assertLinesEqual(actual: Seq[Any], expected: Seq[Any]): Unit = {
+    val seqDifference = SeqDifference.diff(actual, expected)
+    assert(seqDifference.isSame, seqDifference.messageLines.mkString("\n"))
   }
 }
