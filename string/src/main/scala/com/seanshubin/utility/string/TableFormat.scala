@@ -34,7 +34,6 @@ object TableFormat {
   val AsciiDrawingCharacters = new TableFormat(Content(" ", "|", "|", "|"), Top("-", "/", "+", "\\"), Middle("-", "+", "+", "+"), Bottom("-", "\\", "+", "/"))
   val CompactDrawingCharacters = new TableFormat(Content(" ", "", " ", ""))
 
-
   trait VerticalSeparators {
     def padding: String
 
