@@ -74,8 +74,15 @@ class JsonMarshallerTest extends FunSuite {
     val actual = jsonMarshaller.fromJsonArray(json, classOf[Int])
     assert(actual === expected)
   }
+  test("array of long from json") {
+    val json = """{ "values": [ 1, 2, 3 ] }"""
+    val expected = SampleForMarshallingArrayOfLong(Seq(1L, 2L, 3L))
+    val actual = jsonMarshaller.fromJson(json, classOf[SampleForMarshallingArrayOfLong])
+    assert(actual === expected)
+    assert(actual.values(1) + 1 === 3L)
+  }
   test("merge map into map") {
-    assert(merge( """{"a":1, "b":2, "c":3}""", """{"b":3, "c":null, "d":4}""") === normalize( """{"a":1, "b":3, "d":4}"""))
+    assert(merge("""{"a":1, "b":2, "c":3}""", """{"b":3, "c":null, "d":4}""") === normalize("""{"a":1, "b":3, "d":4}"""))
   }
   test("java 8 time types") {
     val epochMilli = 1445550663281L
